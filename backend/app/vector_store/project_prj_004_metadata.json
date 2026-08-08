@@ -29,11 +29,11 @@
   },
   {
     "index_pos": 2,
-    "chunk_id": "chk_PRJ-004_raid_7",
+    "chunk_id": "chk_PRJ-004_raid_5",
     "doc_id": "doc_PRJ-004_raid",
     "source": "RiskRegisterAdapter",
-    "title": "ETL Data Migration Validation & Foreign Key Loss Risk",
-    "text": "RAID Item [Risk] ETL Data Migration Validation & Foreign Key Loss Risk: Potential loss of non-null foreign key references during 10M+ customer record migration. (Score: 90, Owner: Neha Singh)",
+    "title": "Data Migration Validation Failure",
+    "text": "RAID Item [Risk] Data Migration Validation Failure: Potential loss of non-null foreign key references during ETL pipeline run. (Score: 90, Owner: Neha Singh)",
     "metadata": {
       "project_code": "PRJ-004",
       "type": "raid",
@@ -43,21 +43,7 @@
   },
   {
     "index_pos": 3,
-    "chunk_id": "chk_PRJ-004_raid_8",
-    "doc_id": "doc_PRJ-004_raid",
-    "source": "RiskRegisterAdapter",
-    "title": "Staging Database Storage Disk I/O Bottleneck",
-    "text": "RAID Item [Issue] Staging Database Storage Disk I/O Bottleneck: Heavy ETL validation script run exceeds disk IOPS threshold on staging server. (Score: 82, Owner: Neha Singh)",
-    "metadata": {
-      "project_code": "PRJ-004",
-      "type": "raid",
-      "category": "Issue",
-      "risk_score": 82
-    }
-  },
-  {
-    "index_pos": 4,
-    "chunk_id": "chk_PRJ-004_comm_88",
+    "chunk_id": "chk_PRJ-004_comm_22",
     "doc_id": "doc_PRJ-004_comms",
     "source": "ChatAdapter",
     "title": "Chat from Neha Singh",
@@ -67,14 +53,287 @@
     }
   },
   {
-    "index_pos": 5,
-    "chunk_id": "chk_PRJ-004_comm_89",
+    "index_pos": 4,
+    "chunk_id": "chk_PRJ-004_comm_23",
     "doc_id": "doc_PRJ-004_comms",
     "source": "ChatAdapter",
     "title": "Chat from Dev Lead",
     "text": "Communication Log [Slack] Dev Lead -> Neha Singh: Dry run script fixed 15,000 orphan records. Running full validation now.",
     "metadata": {
       "project_code": "PRJ-004"
+    }
+  },
+  {
+    "index_pos": 5,
+    "chunk_id": "chk_PRJ-004_doc_mobile_compliance.txt_0",
+    "doc_id": "doc_file_mobile_compliance.txt",
+    "source": "FileAdapter",
+    "title": "Document: mobile_compliance.txt",
+    "text": "Document [mobile_compliance.txt]: ================================================================================\nMOBILE APPLICATION REVAMP (PRJ-003): BIOMETRIC & COMPLIANCE STANDARD\n================================================================================",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "mobile_compliance.txt"
+    }
+  },
+  {
+    "index_pos": 6,
+    "chunk_id": "chk_PRJ-004_doc_mobile_compliance.txt_1",
+    "doc_id": "doc_file_mobile_compliance.txt",
+    "source": "FileAdapter",
+    "title": "Document: mobile_compliance.txt",
+    "text": "Document [mobile_compliance.txt]: 1. OVERVIEW\nProject Mobile App Revamp (PRJ-003) is currently in the DESIGN phase. It mandates FaceID and TouchID biometric authentication for high-value financial transactions.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "mobile_compliance.txt"
+    }
+  },
+  {
+    "index_pos": 7,
+    "chunk_id": "chk_PRJ-004_doc_mobile_compliance.txt_2",
+    "doc_id": "doc_file_mobile_compliance.txt",
+    "source": "FileAdapter",
+    "title": "Document: mobile_compliance.txt",
+    "text": "Document [mobile_compliance.txt]: 2. COMPLIANCE & SECURITY REQUIREMENTS\n- iOS SDK 18.2 LocalAuthentication framework required.\n- Android KeyStore hardware-backed biometric prompt required.\n- Risk Flag: Beta iOS SDK changes may cause biometric fallback failures on older device models.\n- Mitigation Action: Maintain fallback PIN/OTP secondary authentication flow for non-biometric devices.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "mobile_compliance.txt"
+    }
+  },
+  {
+    "index_pos": 8,
+    "chunk_id": "chk_PRJ-004_doc_orion_sow.txt_0",
+    "doc_id": "doc_file_orion_sow.txt",
+    "source": "FileAdapter",
+    "title": "Document: orion_sow.txt",
+    "text": "Document [orion_sow.txt]: ================================================================================\nSTATEMENT OF WORK (SOW): PROJECT ORION UPGRADE (PRJ-001)\n================================================================================",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "orion_sow.txt"
+    }
+  },
+  {
+    "index_pos": 9,
+    "chunk_id": "chk_PRJ-004_doc_orion_sow.txt_1",
+    "doc_id": "doc_file_orion_sow.txt",
+    "source": "FileAdapter",
+    "title": "Document: orion_sow.txt",
+    "text": "Document [orion_sow.txt]: 1. PROJECT SUMMARY\nProject Orion Upgrade focuses on modernizing core enterprise legacy backend services into cloud-native microservices, optimizing database performance, and migrating on-premise workloads to multi-region cloud infrastructure.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "orion_sow.txt"
+    }
+  },
+  {
+    "index_pos": 10,
+    "chunk_id": "chk_PRJ-004_doc_orion_sow.txt_2",
+    "doc_id": "doc_file_orion_sow.txt",
+    "source": "FileAdapter",
+    "title": "Document: orion_sow.txt",
+    "text": "Document [orion_sow.txt]: 2. LIFECYCLE PHASE: MOBILIZATION\n- Duration: May 1, 2025 to August 28, 2025\n- Key Milestones:\n  * M1.1: Vendor Contract Finalization & SLA Sign-off (Target: May 10, 2025)\n  * M1.2: Resource Onboarding & Security Access Provisioning (Target: May 20, 2025)\n  * M1.3: Third-Party API Integration Specification Review (Target: May 25, 2025)\n  * M1.4: Legacy Database Refactoring & Schema Validation (Target: June 15, 2025)",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "orion_sow.txt"
+    }
+  },
+  {
+    "index_pos": 11,
+    "chunk_id": "chk_PRJ-004_doc_orion_sow.txt_3",
+    "doc_id": "doc_file_orion_sow.txt",
+    "source": "FileAdapter",
+    "title": "Document: orion_sow.txt",
+    "text": "Document [orion_sow.txt]: 3. KNOWN RISKS AND ASSUMPTIONS\n- Risk R-001 (Vendor API Delay): Dependency on CloudCorp API v3.2 release. If delayed beyond May 20, mock server endpoints must be deployed.\n- Assumption A-001: Legacy Oracle DB tables are assumed to contain valid UTF-8 strings without orphan foreign key constraints.\n- Dependency D-001: Final deployment requires operational handover sign-off from Enterprise SecOps.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "orion_sow.txt"
+    }
+  },
+  {
+    "index_pos": 12,
+    "chunk_id": "chk_PRJ-004_doc_orion_sow.txt_4",
+    "doc_id": "doc_file_orion_sow.txt",
+    "source": "FileAdapter",
+    "title": "Document: orion_sow.txt",
+    "text": "Document [orion_sow.txt]: 4. DELIVERABLES & ACCEPTANCE CRITERIA\n- 99.95% system uptime on cloud microservices.\n- Zero unmasked PII in application logs.\n- Executive status reports generated weekly for PMO review.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "orion_sow.txt"
+    }
+  },
+  {
+    "index_pos": 13,
+    "chunk_id": "chk_PRJ-004_doc_pegasus_architecture.txt_0",
+    "doc_id": "doc_file_pegasus_architecture.txt",
+    "source": "FileAdapter",
+    "title": "Document: pegasus_architecture.txt",
+    "text": "Document [pegasus_architecture.txt]: ================================================================================\nPROJECT PEGASUS IMPLEMENTATION: SYSTEM ARCHITECTURE SPECIFICATION\n================================================================================",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "pegasus_architecture.txt"
+    }
+  },
+  {
+    "index_pos": 14,
+    "chunk_id": "chk_PRJ-004_doc_pegasus_architecture.txt_1",
+    "doc_id": "doc_file_pegasus_architecture.txt",
+    "source": "FileAdapter",
+    "title": "Document: pegasus_architecture.txt",
+    "text": "Document [pegasus_architecture.txt]: 1. OVERVIEW\nProject Pegasus (PRJ-002) is currently in the PLANNING phase. It involves integrating the enterprise ERP system with modern microservices via asynchronous event-driven queues (RabbitMQ/Kafka).",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "pegasus_architecture.txt"
+    }
+  },
+  {
+    "index_pos": 15,
+    "chunk_id": "chk_PRJ-004_doc_pegasus_architecture.txt_2",
+    "doc_id": "doc_file_pegasus_architecture.txt",
+    "source": "FileAdapter",
+    "title": "Document: pegasus_architecture.txt",
+    "text": "Document [pegasus_architecture.txt]: 2. ARCHITECTURAL DEPENDENCIES & ASSUMPTIONS\n- Database Schema: PostgreSQL 16 master database with read-replicas. Legacy migration from Oracle 11g.\n- Risk Flag: High probability of schema mismatch during automated script migration due to legacy column data types (RAW vs BYTEA).\n- Mitigation Strategy: Perform staging ETL dry-runs with 100% field validation scripts before production cutover.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "pegasus_architecture.txt"
+    }
+  },
+  {
+    "index_pos": 16,
+    "chunk_id": "chk_PRJ-004_doc_risk_sop.txt_0",
+    "doc_id": "doc_file_risk_sop.txt",
+    "source": "FileAdapter",
+    "title": "Document: risk_sop.txt",
+    "text": "Document [risk_sop.txt]: ================================================================================\nSTANDARD OPERATING PROCEDURE (SOP): RISK ESCALATION & RAID FRAMEWORK\n================================================================================",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "risk_sop.txt"
+    }
+  },
+  {
+    "index_pos": 17,
+    "chunk_id": "chk_PRJ-004_doc_risk_sop.txt_1",
+    "doc_id": "doc_file_risk_sop.txt",
+    "source": "FileAdapter",
+    "title": "Document: risk_sop.txt",
+    "text": "Document [risk_sop.txt]: 1. RAID CATEGORIES DEFINITION\nAll program risk analysis and stakeholder communications must categorize project items into four RAID pillars:\n- Risk (R): Potential future events that may negatively impact project objectives (e.g. vendor delay, budget variance).\n- Assumption (A): Factors considered true for planning purposes without concrete proof (e.g. legacy data cleanliness).\n- Issue (I): Current active problems impacting cost, schedule, or quality (e.g. IT access bottleneck).\n- Dependency (Dep): External or internal task completions required before a project task can proceed (e.g. SecOps clearance).",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "risk_sop.txt"
+    }
+  },
+  {
+    "index_pos": 18,
+    "chunk_id": "chk_PRJ-004_doc_risk_sop.txt_2",
+    "doc_id": "doc_file_risk_sop.txt",
+    "source": "FileAdapter",
+    "title": "Document: risk_sop.txt",
+    "text": "Document [risk_sop.txt]: 2. RISK SCORING METHODOLOGY\nRisk Score = Likelihood (1-10) x Impact (1-10)\n- High Risk (Score 70 - 100): Triggers mandatory Executive Alert email and instant mitigation plan generation.\n- Medium Risk (Score 40 - 69): Managed by Project Manager with bi-weekly PMO status updates.\n- Low Risk (Score 1 - 39): Monitored by Team Lead during sprint planning.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "risk_sop.txt"
+    }
+  },
+  {
+    "index_pos": 19,
+    "chunk_id": "chk_PRJ-004_doc_risk_sop.txt_3",
+    "doc_id": "doc_file_risk_sop.txt",
+    "source": "FileAdapter",
+    "title": "Document: risk_sop.txt",
+    "text": "Document [risk_sop.txt]: 3. STAKEHOLDER COMMUNICATION TONE & WORDING RULES\n- Executive Stakeholders: Concise executive summary focusing on financial impact, delayed milestones, and strategic mitigation options.\n- Technical Leads & Developers: Detailed technical root cause, API endpoint specifics, stack trace logs, and code workarounds.\n- Project Managers: Timeline adjustments, resource reallocation needs, dependency maps, and WBS impact.\n- External Clients: Professional, polished summary emphasizing resolution action plans, customer protection, and updated delivery dates.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "risk_sop.txt"
+    }
+  },
+  {
+    "index_pos": 20,
+    "chunk_id": "chk_PRJ-004_doc_risk_sop.txt_4",
+    "doc_id": "doc_file_risk_sop.txt",
+    "source": "FileAdapter",
+    "title": "Document: risk_sop.txt",
+    "text": "Document [risk_sop.txt]: 4. HUMAN APPROVAL MANDATE FOR AI GENERATED EMAILS\nNo AI-generated stakeholder email or report may be dispatched directly to external or executive recipients without explicit Human Approval (Status update: PENDING -> APPROVED) in the Communication Center.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "risk_sop.txt"
+    }
+  },
+  {
+    "index_pos": 21,
+    "chunk_id": "chk_PRJ-004_doc_security_policy.txt_0",
+    "doc_id": "doc_file_security_policy.txt",
+    "source": "FileAdapter",
+    "title": "Document: security_policy.txt",
+    "text": "Document [security_policy.txt]: ================================================================================\nENTERPRISE SECURITY & PII DATA COMPLIANCE POLICY (VERSION 2025.2)\n================================================================================",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "security_policy.txt"
+    }
+  },
+  {
+    "index_pos": 22,
+    "chunk_id": "chk_PRJ-004_doc_security_policy.txt_1",
+    "doc_id": "doc_file_security_policy.txt",
+    "source": "FileAdapter",
+    "title": "Document: security_policy.txt",
+    "text": "Document [security_policy.txt]: 1. OVERVIEW AND OBJECTIVE\nThis policy governs data privacy, Personally Identifiable Information (PII) handling, and security compliance across all enterprise IT programs, software delivery initiatives, and third-party integrations. All project managers, technical leads, software developers, and external vendors must strictly adhere to these protocols.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "security_policy.txt"
+    }
+  },
+  {
+    "index_pos": 23,
+    "chunk_id": "chk_PRJ-004_doc_security_policy.txt_2",
+    "doc_id": "doc_file_security_policy.txt",
+    "source": "FileAdapter",
+    "title": "Document: security_policy.txt",
+    "text": "Document [security_policy.txt]: 2. PII CLASSIFICATION AND MASKING MANDATE\n- Level 1 (Restricted PII): Social Security Numbers (SSN), credit card numbers, biometric templates, and personal passwords. Level 1 PII MUST NEVER be stored in plain text, logged in application trace files, or passed to external LLMs/APIs.\n- Level 2 (Confidential PII): Full employee/client names, personal email addresses, phone numbers, and financial salary bands. Level 2 PII must be masked or anonymized (e.g., regex/NER redaction) prior to sending data to AI agents or RAG vector indexes.\n- Level 3 (Internal Business Data): Project codes, task titles, non-confidential status reports, and technical architectural diagrams.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "security_policy.txt"
+    }
+  },
+  {
+    "index_pos": 24,
+    "chunk_id": "chk_PRJ-004_doc_security_policy.txt_3",
+    "doc_id": "doc_file_security_policy.txt",
+    "source": "FileAdapter",
+    "title": "Document: security_policy.txt",
+    "text": "Document [security_policy.txt]: 3. THIRD-PARTY API INTEGRATION & VENDOR SECURITY RULES\n- Vendors providing third-party APIs must undergo mandatory SecOps audit clearance every 6 months.\n- Any third-party API integration delay exceeding 5 business days triggers an automatic Risk Level High escalation to the Program Management Office (PMO).\n- Fallback mock servers or synthetic test stubs must be utilized during vendor outage windows to avoid blocking critical path sprint timelines.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "security_policy.txt"
+    }
+  },
+  {
+    "index_pos": 25,
+    "chunk_id": "chk_PRJ-004_doc_security_policy.txt_4",
+    "doc_id": "doc_file_security_policy.txt",
+    "source": "FileAdapter",
+    "title": "Document: security_policy.txt",
+    "text": "Document [security_policy.txt]: 4. DATA RETENTION AND AUDIT LOGGING\n- Audit logs capturing user access, administrative overrides, AI prompt executions, and role permissions must be retained in an immutable database store for a minimum of 36 months.\n- System administrators are audited quarterly for privileged role updates.",
+    "metadata": {
+      "project_code": "PRJ-004",
+      "type": "file",
+      "filename": "security_policy.txt"
     }
   }
 ]
