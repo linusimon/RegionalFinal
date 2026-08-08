@@ -1714,11 +1714,6 @@ function renderChatTab() {
           </div>
         </div>
 
-        <!-- Quick Prompt Chips -->
-        <div class="chat-quick-bar">
-          ${_getQuickChips().map(c => `<button class="chat-quick-chip" onclick="chatQuickSend('${c.prompt}')">${c.label}</button>`).join('')}
-        </div>
-
         <!-- Message Feed -->
         <div class="chat-feed" id="chatFeed">
           ${feedHtml}
@@ -1764,7 +1759,7 @@ function renderChatTab() {
         ${traceHtml}
         ${state.chatNodeTraces.length > 0 ? `
           <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--outline-variant); font-size:10px; color:var(--on-surface-variant)">
-            4 Nodes: Data → Risk → LLM → Memory
+            3 Nodes: Data → Risk → LLM
           </div>
         ` : ''}
       </div>
@@ -1774,14 +1769,7 @@ function renderChatTab() {
 
 // ─── Chat Helper: Quick Chips Config ────────────────────────────────────────
 function _getQuickChips() {
-  return [
-    { label: '⚡ Critical Path Risks', prompt: `What are the critical path risks for ${state.selectedProjectCode}?` },
-    { label: '🛡️ Add Mitigation', prompt: `Add a mitigation action for the top risk in ${state.selectedProjectCode}` },
-    { label: '📧 Draft Executive Email', prompt: `Draft a stakeholder email for ${state.selectedProjectCode} risk update` },
-    { label: '📊 Run Full Analysis', prompt: `Run full RAID analysis for ${state.selectedProjectCode}` },
-    { label: '📋 RAID Summary', prompt: `Summarize all RAID items for ${state.selectedProjectCode}` },
-    { label: '⏱️ Schedule Risks', prompt: `What schedule risks exist for ${state.selectedProjectCode}?` },
-  ];
+  return [];
 }
 
 // ─── Chat Helper: Render a single message ───────────────────────────────────
@@ -1968,11 +1956,21 @@ async function sendChatMessage(overrideText) {
   renderApp();
   _scrollChatToBottom();
 
-  // Build conversation history from past user/assistant messages
-  const history = state.chatMessages
-    .filter(m => m.role === 'user' || m.role === 'assistant')
-    .slice(-12)
-    .map(m => ({ role: m.role, content: m.content }));
+  // Fetch isolated conversation history from DB for this user + project
+  let history = [];
+  try {
+    const histToken = state.authToken || localStorage.getItem('pmai_auth_token');
+    const histRes = await fetch(
+      `${API_BASE_URL}/chat/history?project_code=${encodeURIComponent(state.selectedProjectCode)}&limit=12`,
+      { headers: { 'Authorization': `Bearer ${histToken}` } }
+    );
+    if (histRes.ok) {
+      const histData = await histRes.json();
+      history = histData.history || [];
+    }
+  } catch (_) {
+    // Non-fatal: if history fetch fails, proceed with empty context
+  }
 
   // Create the assistant placeholder message
   const assistantMsgId = Date.now() + 2;
@@ -2053,6 +2051,19 @@ async function sendChatMessage(overrideText) {
           state.chatMessages = state.chatMessages.filter(m => m.role !== 'status');
           // Add contextual reply chips
           aMsg.replies = _getSuggestedReplies(text);
+          // Save this completed turn to DB — fire-and-forget, non-blocking
+          // Errors are logged, not silently swallowed
+          const assistantText = aMsg.content;
+          const saveToken = state.authToken || localStorage.getItem('pmai_auth_token');
+          fetch(`${API_BASE_URL}/chat/history`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${saveToken}` },
+            body: JSON.stringify({
+              project_code:    state.selectedProjectCode,
+              user_message:    text,
+              assistant_reply: assistantText
+            })
+          }).catch(err => console.error('[ChatHistory] Save failed (non-fatal):', err));
         }
 
         // Patch DOM directly for smooth token streaming (avoid full re-render)
@@ -2099,6 +2110,12 @@ function clearChatHistory() {
   state.chatNodeTraces = [];
   state.chatInput = '';
   renderApp();
+  // Also clear DB history for this user + project
+  const token = state.authToken || localStorage.getItem('pmai_auth_token');
+  fetch(`${API_BASE_URL}/chat/history?project_code=${encodeURIComponent(state.selectedProjectCode)}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  }).catch(err => console.error('[ChatHistory] Clear failed (non-fatal):', err));
 }
 
 function _scrollChatToBottom() {
@@ -2109,19 +2126,7 @@ function _scrollChatToBottom() {
 }
 
 function _getSuggestedReplies(lastMessage) {
-  const m = lastMessage.toLowerCase();
-  if (m.includes('risk')) return [
-    { label: '🛡️ Add Mitigation', prompt: `Add a mitigation for the top risk in ${state.selectedProjectCode}` },
-    { label: '📧 Escalate to Executive', prompt: `Draft a stakeholder email for ${state.selectedProjectCode}` },
-  ];
-  if (m.includes('email') || m.includes('draft')) return [
-    { label: '✅ View Comm Center', prompt: `Show communication drafts for ${state.selectedProjectCode}` },
-    { label: '⚡ Top Risks', prompt: `What are the critical risks for ${state.selectedProjectCode}?` },
-  ];
-  return [
-    { label: '📊 Full RAID Analysis', prompt: `Run full RAID analysis for ${state.selectedProjectCode}` },
-    { label: '📋 RAID Summary', prompt: `Summarize all RAID items for ${state.selectedProjectCode}` },
-  ];
+  return [];
 }
 
 // ─── Approve / Cancel Action Cards ──────────────────────────────────────────

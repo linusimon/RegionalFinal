@@ -261,3 +261,29 @@ class KnowledgeDoc(db.Model):
             'uploaded_by': self.uploaded_by,
             'uploaded_at': self.uploaded_at.isoformat() if self.uploaded_at else None
         }
+
+
+class ChatHistory(db.Model):
+    """
+    Stores per-user, per-project conversation turns for the AI chat assistant.
+    Replaces the class-level MemoryAgent shared list which had zero user isolation.
+    Each completed chat turn is saved as two rows: role='user' and role='assistant'.
+    """
+    __tablename__ = 'chat_history'
+
+    id           = db.Column(db.Integer, primary_key=True)
+    user_id      = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_code = db.Column(db.String(50), nullable=False)
+    role         = db.Column(db.String(20), nullable=False)   # 'user' or 'assistant'
+    content      = db.Column(db.Text, nullable=False)
+    created_at   = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id':           self.id,
+            'user_id':      self.user_id,
+            'project_code': self.project_code,
+            'role':         self.role,
+            'content':      self.content,
+            'created_at':   self.created_at.isoformat() if self.created_at else None
+        }

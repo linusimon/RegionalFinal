@@ -47,6 +47,7 @@ def create_app():
     from backend.app.api.emails import emails_bp
     from backend.app.api.admin import admin_bp
     from backend.app.api.agents import agents_bp
+    from backend.app.api.chat_history import chat_history_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -54,6 +55,7 @@ def create_app():
     app.register_blueprint(emails_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(agents_bp)
+    app.register_blueprint(chat_history_bp)
 
     @app.route('/health', methods=['GET'])
     def health_check():

@@ -145,8 +145,9 @@ def seed_backend_db(app):
         db.session.add_all(tasks)
         db.session.commit()
 
-        # 4. Seed RAID Register Items (Risks, Assumptions, Issues, Dependencies)
+        # 4. Seed RAID Register Items for all 5 Projects (Risks, Assumptions, Issues, Dependencies)
         raids = [
+            # PRJ-001 (Mobilization Phase)
             RAIDItem(
                 project_id=p1.id,
                 category="Risk",
@@ -156,7 +157,7 @@ def seed_backend_db(app):
                 impact="High",
                 risk_score=85,
                 status="Open",
-                owner_name="Amit Joshi",
+                owner_name="Rohit Verma",
                 root_cause="Vendor developer dependency and slow turnaround on spec updates."
             ),
             RAIDItem(
@@ -171,89 +172,172 @@ def seed_backend_db(app):
                 owner_name="Rohit Verma",
                 root_cause="Manual background verification pipeline."
             ),
+
+            # PRJ-002 (Planning Phase)
             RAIDItem(
                 project_id=p2.id,
-                category="Assumption",
-                title="Legacy System Data Compatibility Assumption",
-                description="Assumed legacy Oracle DB tables contain pre-cleansed UTF-8 string entries.",
-                likelihood="Medium",
-                impact="Medium",
-                risk_score=60,
-                status="Monitoring",
-                owner_name="Sneha Iyer",
-                root_cause="Lack of early data profiling report."
-            ),
-            RAIDItem(
-                project_id=p3.id,
-                category="Dependency",
-                title="Biometric Hardware Module Availability",
-                description="Mobile application deployment depends on iOS SDK 18.2 biometric updates.",
+                category="Risk",
+                title="Legacy Oracle Database Schema Encoding Drift",
+                description="Legacy database character encoding mismatches cause ETL pipeline mapping failures.",
                 likelihood="High",
                 impact="High",
                 risk_score=80,
                 status="Open",
-                owner_name="Karan Patel",
-                root_cause="Apple Beta SDK release timeline."
+                owner_name="Amit Joshi",
+                root_cause="Lack of early database schema profiling report."
             ),
+            RAIDItem(
+                project_id=p2.id,
+                category="Assumption",
+                title="ERP Middleware Endpoint Compatibility",
+                description="Assumed third-party ERP SOAP endpoints match OpenAPI REST specifications.",
+                likelihood="Medium",
+                impact="Medium",
+                risk_score=65,
+                status="Monitoring",
+                owner_name="Amit Joshi",
+                root_cause="Unverified vendor specification document."
+            ),
+
+            # PRJ-003 (Design Phase)
+            RAIDItem(
+                project_id=p3.id,
+                category="Risk",
+                title="iOS SDK 18.2 Biometric Authentication API Latency",
+                description="Mobile application deployment depends on external Apple Beta SDK biometric release.",
+                likelihood="High",
+                impact="High",
+                risk_score=88,
+                status="Open",
+                owner_name="Karan Patel",
+                root_cause="Apple Beta SDK release timeline delay."
+            ),
+            RAIDItem(
+                project_id=p3.id,
+                category="Dependency",
+                title="Hardware Biometric Module Compliance Sign-off",
+                description="Hardware biometric security review queue pending approval from SecOps.",
+                likelihood="Medium",
+                impact="High",
+                risk_score=75,
+                status="Open",
+                owner_name="Karan Patel",
+                root_cause="SecOps compliance queue backlog."
+            ),
+
+            # PRJ-004 (Execution Phase)
             RAIDItem(
                 project_id=p4.id,
                 category="Risk",
-                title="Data Migration Validation Failure",
-                description="Potential loss of non-null foreign key references during ETL pipeline run.",
-                likelihood="Medium",
+                title="ETL Data Migration Validation & Foreign Key Loss Risk",
+                description="Potential loss of non-null foreign key references during 10M+ customer record migration.",
+                likelihood="High",
                 impact="High",
                 risk_score=90,
                 status="Open",
                 owner_name="Neha Singh",
-                root_cause="Orphaned records in legacy database."
+                root_cause="Orphaned records in legacy source database."
             ),
+            RAIDItem(
+                project_id=p4.id,
+                category="Issue",
+                title="Staging Database Storage Disk I/O Bottleneck",
+                description="Heavy ETL validation script run exceeds disk IOPS threshold on staging server.",
+                likelihood="High",
+                impact="Medium",
+                risk_score=82,
+                status="Open",
+                owner_name="Neha Singh",
+                root_cause="Unoptimized staging server disk provisioning."
+            ),
+
+            # PRJ-005 (Closure Phase)
             RAIDItem(
                 project_id=p5.id,
                 category="Dependency",
-                title="Operational Handover Sign-off",
-                description="Final project closure requires sign-off from Enterprise SecOps team.",
+                title="SecOps Disaster Recovery Audit & Handover Sign-off",
+                description="Final project closure requires formal SecOps disaster recovery failover sign-off.",
                 likelihood="Low",
                 impact="Medium",
                 risk_score=35,
                 status="Monitoring",
                 owner_name="Rohit Verma",
-                root_cause="SecOps audit queue backlog."
+                root_cause="SecOps final audit sign-off checklist."
             )
         ]
         db.session.add_all(raids)
         db.session.commit()
 
-        # 5. Seed Mitigation Actions
+        # 5. Seed Mitigation Actions for All Projects
         r1 = RAIDItem.query.filter_by(title="Third-party API Integration Delay").first()
-        r4 = RAIDItem.query.filter_by(title="Data Migration Validation Failure").first()
+        r2 = RAIDItem.query.filter_by(title="Legacy Oracle Database Schema Encoding Drift").first()
+        r3 = RAIDItem.query.filter_by(title="iOS SDK 18.2 Biometric Authentication API Latency").first()
+        r4 = RAIDItem.query.filter_by(title="ETL Data Migration Validation & Foreign Key Loss Risk").first()
+        r5 = RAIDItem.query.filter_by(title="SecOps Disaster Recovery Audit & Handover Sign-off").first()
 
         mitigations = [
+            # PRJ-001 Mitigations
             MitigationAction(
                 raid_id=r1.id,
-                title="Engage Vendor Lead & Spin Up Mock Server",
+                title="Engage Vendor Lead & Spin Up Mock Server for PRJ-001",
                 description="Create mock API endpoints based on swagger spec to unblock frontend development team.",
-                owner_name="Amit Joshi",
+                owner_name="Rohit Verma",
                 due_date="2025-05-25",
                 status="In Progress",
                 progress_pct=60
             ),
             MitigationAction(
                 raid_id=r1.id,
-                title="Adjust Critical Path Timeline",
-                description="Shift integration testing milestone out by 10 business days.",
+                title="Escalate SLA Delays to Vendor Account Executive",
+                description="Issue formal PMO escalation notification to vendor leadership.",
                 owner_name="Rohit Verma",
                 due_date="2025-05-28",
                 status="Planned",
                 progress_pct=20
             ),
+
+            # PRJ-002 Mitigations
+            MitigationAction(
+                raid_id=r2.id,
+                title="Deploy Oracle Data Profiling Script & Schema Middleware Mock for PRJ-002",
+                description="Execute automated schema validation to map legacy encoding to UTF-8 before ETL run.",
+                owner_name="Amit Joshi",
+                due_date="2025-05-28",
+                status="In Progress",
+                progress_pct=50
+            ),
+
+            # PRJ-003 Mitigations
+            MitigationAction(
+                raid_id=r3.id,
+                title="Implement Biometric Fallback Authentication & Sandbox Testing for PRJ-003",
+                description="Build local OAuth 2.0 fallback auth module while waiting for iOS SDK 18.2 final release.",
+                owner_name="Karan Patel",
+                due_date="2025-06-05",
+                status="In Progress",
+                progress_pct=40
+            ),
+
+            # PRJ-004 Mitigations
             MitigationAction(
                 raid_id=r4.id,
-                title="Run Pre-validation Script & Rollback Plan",
+                title="Run Pre-validation Script & Rollback Plan for PRJ-004",
                 description="Execute dry-run ETL on staging instance with automated orphan record filter.",
                 owner_name="Neha Singh",
                 due_date="2025-05-20",
                 status="In Progress",
                 progress_pct=80
+            ),
+
+            # PRJ-005 Mitigations
+            MitigationAction(
+                raid_id=r5.id,
+                title="Execute Automated DR Failover Simulation & SecOps Sign-off for PRJ-005",
+                description="Schedule live failover test and submit compliance report to SecOps board.",
+                owner_name="Rohit Verma",
+                due_date="2025-06-10",
+                status="Planned",
+                progress_pct=90
             )
         ]
         db.session.add_all(mitigations)

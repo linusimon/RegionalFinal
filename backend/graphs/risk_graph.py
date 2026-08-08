@@ -72,7 +72,7 @@ class RiskIntelligenceGraph:
             rule_triggers.append("RULE_PHASE_PLANNING_CHECK")
             detected_raids.append({
                 "category": "Assumption",
-                "title": "Legacy System Data Encoding Assumption",
+                "title": "Legacy System Data Compatibility Assumption",
                 "description": "Assumed legacy DB tables have pre-cleansed strings without orphaned foreign keys.",
                 "likelihood": "Medium",
                 "impact": "High",

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProjectStateService } from '../../services/project-state.service';
 
 @Component({
   selector: 'app-header',
@@ -44,11 +45,15 @@ export class HeaderComponent {
   @Output() roleChanged = new EventEmitter<string>();
   @Output() projectChanged = new EventEmitter<string>();
 
+  constructor(private projectState: ProjectStateService) {}
+
   onRoleSelect(event: any): void {
     this.roleChanged.emit(event.target.value);
   }
 
   onProjectSelect(event: any): void {
-    this.projectChanged.emit(event.target.value);
+    const code = event.target.value;
+    this.projectState.setSelectedProject(code);
+    this.projectChanged.emit(code);
   }
 }

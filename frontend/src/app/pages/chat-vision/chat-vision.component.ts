@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AgentService } from '../../services/agent.service';
-import { SpeechService } from '../../services/speech.service';
+import { ProjectStateService } from '../../services/project-state.service';
 
 @Component({
   selector: 'app-chat-vision',
@@ -10,46 +10,45 @@ import { SpeechService } from '../../services/speech.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './chat-vision.component.html'
 })
-export class ChatVisionComponent {
-  userQuery: string = 'What are the top risks for Project Orion Upgrade?';
+export class ChatVisionComponent implements OnInit {
+  selectedProjectCode: string = 'PRJ-001';
+  projectsList: string[] = ['PRJ-001', 'PRJ-002', 'PRJ-003', 'PRJ-004', 'PRJ-005'];
+  userQuery: string = 'What are the top risks for PRJ-001?';
   chatResponse: string = '';
-  isRecordingVoice: boolean = false;
-  selectedFileName: string = '';
 
   constructor(
     private agentService: AgentService,
-    private speechService: SpeechService
+    private projectState: ProjectStateService
   ) {}
 
-  sendQuery(): void {
-    this.agentService.sendAgentChat(this.userQuery, 'PRJ-001').subscribe(res => {
-      if (res && res.chat_result) {
-        this.chatResponse = res.chat_result.response;
+  ngOnInit(): void {
+    this.projectState.selectedProject$.subscribe(code => {
+      if (code && code !== this.selectedProjectCode) {
+        this.selectedProjectCode = code;
+        this.userQuery = `What are the top risks for ${code}?`;
       }
     });
   }
 
-  startVoice(): void {
-    this.isRecordingVoice = true;
-    this.speechService.startSpeechToText(
-      (text) => {
-        this.userQuery = text;
-        this.isRecordingVoice = false;
-        this.speechService.textToSpeech(`Received query: ${text}. Running Chat Supervisor Agent.`);
-        this.sendQuery();
-      },
-      (err) => {
-        this.isRecordingVoice = false;
-        alert(`Voice Error: ${err}`);
-      }
-    );
+  onProjectChange(code: string): void {
+    this.projectState.setSelectedProject(code);
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFileName = file.name;
-      this.chatResponse = `[Vision OCR Agent] Successfully parsed document '${file.name}'. Extracting text and performing RAG policy compliance check against security_policy.txt...`;
-    }
+  sendQuery(): void {
+    if (!this.userQuery || !this.userQuery.trim()) return;
+    
+    const query = this.userQuery.trim();
+    this.chatResponse = 'Thinking...';
+    
+    this.agentService.sendAgentChat(query, this.selectedProjectCode).subscribe({
+      next: (res) => {
+        if (res && res.chat_result) {
+          this.chatResponse = res.chat_result.response;
+        }
+      },
+      error: (err) => {
+        this.chatResponse = `Error: ${err.message || err}`;
+      }
+    });
   }
 }

@@ -1,23 +1,24 @@
 <div class="card">
-  <div class="card-title">Multi-Modal AI Assistant (Text, Voice STT/TTS & Vision Document OCR)</div>
-  
-  <div style="display:flex; gap:10px; margin-bottom:16px;">
-    <input type="text" [(ngModel)]="userQuery" style="flex:1; background:var(--bg-dark); border:1px solid var(--card-border); color:#fff; padding:10px; border-radius:6px;" placeholder="Ask about project risks or SOW policy compliance...">
-    <button class="btn" (click)="sendQuery()">Send Query</button>
-    <button class="btn btn-secondary" (click)="startVoice()">{{ isRecordingVoice ? '🎙 Listening...' : '🎤 Voice Input' }}</button>
+  <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+    <span>AI Chat Assistant</span>
     
-    <label class="btn btn-secondary" style="cursor:pointer; display:inline-block;">
-      📷 OCR Vision Upload
-      <input type="file" (change)="onFileSelected($event)" style="display:none;" accept="image/*,.pdf,.txt,.doc,.docx">
-    </label>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span style="font-size:12px; color:var(--text-muted);">Active Project:</span>
+      <select [ngModel]="selectedProjectCode" (ngModelChange)="onProjectChange($event)" style="background:var(--bg-dark); border:1px solid var(--card-border); color:#fff; padding:6px 12px; border-radius:6px; font-weight:600; cursor:pointer;">
+        <option *ngFor="let p of projectsList" [value]="p">{{ p }} - {{ p === 'PRJ-001' ? 'Orion' : p === 'PRJ-002' ? 'Pegasus' : p === 'PRJ-003' ? 'Identity' : p === 'PRJ-004' ? 'Migration' : 'Analytics' }}</option>
+      </select>
+    </div>
+  </div>
+  
+  <div style="display:flex; gap:10px; margin-bottom:16px; margin-top:12px;">
+    <input type="text" [(ngModel)]="userQuery" (keyup.enter)="sendQuery()" style="flex:1; background:var(--bg-dark); border:1px solid var(--card-border); color:#fff; padding:10px 14px; border-radius:6px; font-size:14px;" placeholder="Ask any question about your projects, risks, or program health...">
+    <button class="btn btn-primary" (click)="sendQuery()" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); padding:10px 20px; font-weight:bold;">Send</button>
   </div>
 
-  <div *ngIf="selectedFileName" style="margin-bottom:12px; font-size:12px; color:var(--success);">
-    📄 Uploaded for OCR Vision Analysis: <strong>{{ selectedFileName }}</strong>
-  </div>
-
-  <div style="background:var(--bg-dark); border:1px solid var(--card-border); padding:16px; border-radius:8px; min-height:200px;">
-    <p style="color:var(--success); font-weight:bold;">[Chat Supervisor Agent Response]</p>
-    <p style="margin-top:8px;">{{ chatResponse || 'Enter a prompt, use voice input, or upload a document for OCR Vision analysis...' }}</p>
+  <div style="background:var(--bg-dark); border:1px solid var(--card-border); padding:18px; border-radius:8px; min-height:220px;">
+    <div style="color:var(--success); font-weight:bold; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+      <span>🤖 AI Assistant Response (Active Project: {{ selectedProjectCode }})</span>
+    </div>
+    <div style="color:#e2e8f0; font-size:14px; line-height:1.6; white-space:pre-wrap;">{{ chatResponse || 'Type a query above and click Send to chat with the AI Assistant...' }}</div>
   </div>
 </div>
