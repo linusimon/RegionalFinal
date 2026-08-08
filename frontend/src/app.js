@@ -855,8 +855,9 @@ function renderDashboardTab(currentProject) {
 
           </div>
           <span class="chip chip-info" style="display:flex; align-items:center; gap:4px">
-            <span class="material-symbols-outlined" style="font-size:14px">bolt</span> Live LLM Synthesis
+            <span class="material-symbols-outlined" style="font-size:14px">bolt</span> AI Analysis
           </span>
+
         </div>
         <p style="color:var(--on-surface-variant); font-size:12px; margin-bottom:14px">
           LLM Project Risk Overview synthesized from <code>raid_items</code>, <code>emails</code>, and <code>project_plan_wbs</code> (tasks) for ${currentProject.code}
