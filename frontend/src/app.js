@@ -731,12 +731,33 @@ function generateHeatmapMatrixHTML(currentProject) {
   }
   return html;
 }
+async function fetchProjectAiOverview(projectCode) {
+  if (!state.projectAiOverviewMap) state.projectAiOverviewMap = {};
+  if (state.projectAiOverviewMap[projectCode]) return state.projectAiOverviewMap[projectCode];
+
+  const data = await apiGet(`/projects/${projectCode}/ai-overview`);
+  if (data && data.status === 'success') {
+    state.projectAiOverviewMap[projectCode] = data;
+    renderApp();
+    return data;
+  }
+  return null;
+}
 
 // 1. Dashboard Tab View
 function renderDashboardTab(currentProject) {
   const userRole = state.currentUser ? state.currentUser.role : state.currentRole;
   const isAdminRole = userRole === 'Admin' || userRole === 'System Admin' || userRole === 'System Administrator' || userRole === 'Super Admin';
   const canAccessCommsAndBreakdown = userRole === 'Program Manager' || isAdminRole;
+
+  if (!state.projectAiOverviewMap) state.projectAiOverviewMap = {};
+  const overviewData = state.projectAiOverviewMap[currentProject.code];
+  if (!overviewData && !state.isFetchingAiOverview) {
+    state.isFetchingAiOverview = true;
+    fetchProjectAiOverview(currentProject.code).then(() => {
+      state.isFetchingAiOverview = false;
+    });
+  }
 
   // Filter RAID items by selected project AND selected date range
   const filteredRaidItems = state.raidItems.filter(r => {
@@ -833,47 +854,31 @@ function renderDashboardTab(currentProject) {
             <span>AI Analyse</span>
           </div>
           <span class="chip chip-info" style="display:flex; align-items:center; gap:4px">
-            <span class="material-symbols-outlined" style="font-size:14px">bolt</span> Live AI Insights
+            <span class="material-symbols-outlined" style="font-size:14px">bolt</span> Live LLM Synthesis
           </span>
         </div>
-        <p style="color:var(--on-surface-variant); font-size:12px; margin-bottom:16px">
-          Automated multi-agent risk assessment & strategic recommendations for ${currentProject.code}
+        <p style="color:var(--on-surface-variant); font-size:12px; margin-bottom:14px">
+          LLM Project Risk Overview synthesized from <code>raid_items</code>, <code>emails</code>, and <code>project_plan_wbs</code> (tasks) for ${currentProject.code}
         </p>
 
-        <!-- Section 1: Multi-Agent Portfolio Intelligence -->
-        <div style="background:var(--surface-container-low); padding:16px; border-radius:10px; border:1px solid var(--outline-variant); display:flex; flex-direction:column; gap:12px; margin-bottom:12px">
-          <div style="display:flex; align-items:center; justify-content:space-between">
-            <span style="font-size:13px; font-weight:700; color:var(--on-surface)">Multi-Agent Portfolio Intelligence</span>
-            <span class="chip chip-warning">High Priority Risk</span>
-          </div>
-          <p style="font-size:12px; color:var(--on-surface-variant); line-height:1.5; margin:0">
-            Vendor API spec bottleneck detected on WBS 1.3 (Score 88). LangGraph multi-agent reasoning recommends spinning up mock sandbox endpoints to preserve sprint velocity.
-          </p>
-          ${canAccessCommsAndBreakdown ? `
-            <button class="btn-primary" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; padding: 10px 18px; width: 100%; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);" onclick="switchTab('comms')">
-              <span class="material-symbols-outlined" style="font-size: 18px; color: #ffffff">chat</span>
-              <span>Communicate</span>
-            </button>
-          ` : ''}
-        </div>
 
-        <!-- Section 2: Mitigation -->
-        <div style="background:var(--surface-container-low); padding:16px; border-radius:10px; border:1px solid var(--outline-variant); display:flex; flex-direction:column; gap:12px">
-          <div style="display:flex; align-items:center; justify-content:space-between">
-            <span style="font-size:13px; font-weight:700; color:var(--on-surface)">Mitigation</span>
-            <span class="chip chip-success">Action Required</span>
+        ${overviewData ? `
+          <div style="background:var(--surface-container-low); padding:16px; border-radius:10px; border:1px solid var(--outline-variant); line-height:1.6; font-size:13px; color:var(--on-surface);">
+            ${overviewData.summary}
+            <div style="display:flex; gap:16px; margin-top:14px; padding-top:10px; border-top:1px solid var(--outline-variant); font-size:11px; color:var(--on-surface-variant);">
+              <span>📊 RAID Items: <strong>${overviewData.raid_count}</strong></span>
+              <span>✉ Emails Logged: <strong>${overviewData.email_count}</strong></span>
+              <span>📋 WBS Tasks: <strong>${overviewData.task_count}</strong></span>
+            </div>
           </div>
-          <p style="font-size:12px; color:var(--on-surface-variant); line-height:1.5; margin:0">
-            Deploy automated mock sandbox server & adjust critical path integration milestone by 10 business days to mitigate vendor turnaround delay.
-          </p>
-          ${canAccessCommsAndBreakdown ? `
-            <button class="btn-primary" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; padding: 10px 18px; width: 100%; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);" onclick="switchTab('comms')">
-              <span class="material-symbols-outlined" style="font-size: 18px; color: #ffffff">play_arrow</span>
-              <span>Take Action</span>
-            </button>
-          ` : ''}
-        </div>
+        ` : `
+          <div style="background:var(--surface-container-low); padding:20px; border-radius:10px; text-align:center; color:var(--on-surface-variant);">
+            <span class="material-symbols-outlined spinning" style="font-size:24px; color:var(--primary-container)">progress_activity</span>
+            <div style="font-size:12px; margin-top:8px; font-weight:600;">Synthesizing raid_items, emails, & WBS tasks via LLM...</div>
+          </div>
+        `}
       </div>
+
     `,
     breakdown: `
       <div class="card-box">

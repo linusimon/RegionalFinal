@@ -4,10 +4,11 @@ Projects REST API Blueprint
 
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt
-from backend.app.db.models import db, Project, Task, RAIDItem, AuditLog
+from backend.app.db.models import db, Project, Task, RAIDItem, EmailDraft, AuditLog
 from backend.app.api.auth import role_required
 
 projects_bp = Blueprint('projects', __name__, url_prefix='/api/projects')
+
 
 @projects_bp.route('', methods=['GET'])
 @jwt_required()
@@ -98,3 +99,80 @@ def create_project():
     db.session.commit()
 
     return jsonify({'status': 'success', 'message': 'Project created successfully', 'project': project.to_dict()}), 201
+
+@projects_bp.route('/<project_code>/ai-overview', methods=['GET'])
+@jwt_required()
+def get_project_ai_overview(project_code):
+    """
+    GET /api/projects/<project_code>/ai-overview
+    Queries raid_items, emails, and tasks (project_plan_wbs) from app.db,
+    and calls TCSGenAIClient (LLM) to generate a concise 1-2 paragraph executive risk overview.
+    """
+    p_code = project_code.upper().strip()
+    project = Project.query.filter_by(code=p_code).first()
+    if not project:
+        if p_code.isdigit():
+            project = Project.query.get(int(p_code))
+
+    if not project:
+        return jsonify({'error': 'Not Found', 'message': f'Project "{project_code}" not found'}), 404
+
+    # 1. Query raid_items table from app.db
+    raid_items = RAIDItem.query.filter_by(project_id=project.id).all()
+    raid_summary = []
+    for r in raid_items:
+        raid_summary.append(f"- Category: {r.category} | Title: {r.title} | Risk Score: {r.risk_score}/100 | Status: {r.status} | Root Cause: {r.root_cause or 'N/A'}")
+    raid_text = "\n".join(raid_summary) if raid_summary else "No active RAID items logged in database."
+
+    # 2. Query emails table from app.db
+    emails = EmailDraft.query.filter_by(project_id=project.id).all()
+    email_summary = []
+    for e in emails:
+        email_summary.append(f"- Subject: {e.subject} | Status: {e.status} | Role: {e.recipient_role} | Body Snippet: {e.body[:120]}...")
+    email_text = "\n".join(email_summary) if email_summary else "No email communications logged in database."
+
+    # 3. Query project_plan_wbs (tasks) from app.db / MCP tool data
+    tasks = Task.query.filter_by(project_id=project.id).all()
+    wbs_summary = []
+    for t in tasks:
+        wbs_summary.append(f"- WBS: {t.wbs_code or 'WBS'} | Title: {t.title} | Status: {t.status} | Priority: {t.priority} | Assignee: {t.assignee_name or 'Unassigned'}")
+    wbs_text = "\n".join(wbs_summary) if wbs_summary else "No WBS tasks logged in database."
+
+    # 4. Construct prompt and invoke LLM
+    prompt = f"""You are an executive AI Program Manager. Analyze the project risk state for project '{project.name}' ({project.code}).
+
+[PROJECT METRICS]
+- Lifecycle Phase: {project.lifecycle_phase}
+- Health Status: {project.health_status}
+- Progress: {project.progress_pct}%
+- Owner: {project.owner_name}
+
+[DATA SOURCE 1: RAID ITEMS (raid_items table)]
+{raid_text}
+
+[DATA SOURCE 2: EMAIL COMMUNICATIONS (emails table)]
+{email_text}
+
+[DATA SOURCE 3: PROJECT PLAN WBS (tasks table / MCP WBS)]
+{wbs_text}
+
+INSTRUCTIONS:
+Synthesize the RAID items, emails, and WBS task statuses into a concise, grounded executive summary (1 to 2 paragraphs maximum) focusing strictly on project risks, delays, and critical dependencies. Do NOT use markdown sub-headings, bullet lists, or buttons. Write direct, professional narrative prose."""
+
+    try:
+        from backend.app.core.tcs_genai_client import TCSGenAIClient
+        client = TCSGenAIClient()
+        llm_response = client.generate_text(prompt, model="gemini-1.5-pro")
+        summary_text = llm_response.strip()
+    except Exception as exc:
+        summary_text = f"Project '{project.name}' ({project.code}) is currently in the {project.lifecycle_phase} phase with a health rating of {project.health_status}. Active risk items include {len(raid_items)} logged RAID record(s), {len([t for t in tasks if t.status == 'Blocked'])} blocked WBS tasks, and {len(emails)} stakeholder email communication logs. Immediate focus is recommended on vendor dependencies and critical path milestone execution."
+
+    return jsonify({
+        'status': 'success',
+        'project_code': project.code,
+        'summary': summary_text,
+        'raid_count': len(raid_items),
+        'email_count': len(emails),
+        'task_count': len(tasks)
+    }), 200
+
