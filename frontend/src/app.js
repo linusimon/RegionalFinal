@@ -851,7 +851,8 @@ function renderDashboardTab(currentProject) {
         <div class="card-box-header">
           <div class="card-box-title" style="display:flex; align-items:center; gap:8px">
             <span class="material-symbols-outlined" style="color:var(--primary-container); font-size:20px">auto_awesome</span>
-            <span>AI Analyse</span>
+            <span>Risk Summary</span>
+
           </div>
           <span class="chip chip-info" style="display:flex; align-items:center; gap:4px">
             <span class="material-symbols-outlined" style="font-size:14px">bolt</span> Live LLM Synthesis
