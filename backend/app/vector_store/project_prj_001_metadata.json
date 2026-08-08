@@ -47,7 +47,7 @@
     "doc_id": "doc_PRJ-001_raid",
     "source": "RiskRegisterAdapter",
     "title": "Third-party API Integration Delay",
-    "text": "RAID Item [Risk] Third-party API Integration Delay: Third-party vendor core API availability is delayed by 3 weeks, impacting frontend integration. (Score: 85, Owner: Amit Joshi)",
+    "text": "RAID Item [Risk] Third-party API Integration Delay: Third-party vendor core API availability is delayed by 3 weeks, impacting frontend integration. (Score: 85, Owner: Rohit Verma)",
     "metadata": {
       "project_code": "PRJ-001",
       "type": "raid",
@@ -71,49 +71,7 @@
   },
   {
     "index_pos": 5,
-    "chunk_id": "chk_PRJ-001_raid_7",
-    "doc_id": "doc_PRJ-001_raid",
-    "source": "RiskRegisterAdapter",
-    "title": "Project Orion Upgrade Subsystem API Bottleneck",
-    "text": "RAID Item [Risk] Project Orion Upgrade Subsystem API Bottleneck: AI analysis detected scheduling risk in Mobilization phase across active tasks. (Score: 85, Owner: Rohit Verma)",
-    "metadata": {
-      "project_code": "PRJ-001",
-      "type": "raid",
-      "category": "Risk",
-      "risk_score": 85
-    }
-  },
-  {
-    "index_pos": 6,
-    "chunk_id": "chk_PRJ-001_raid_8",
-    "doc_id": "doc_PRJ-001_raid",
-    "source": "RiskRegisterAdapter",
-    "title": "Third-Party Vendor Delivery Block (vendor_cloudsphere)",
-    "text": "RAID Item [Dependency] Third-Party Vendor Delivery Block (vendor_cloudsphere): Vendor entity 'vendor_cloudsphere' is actively blocking work item 'task_ent_102'. Contractual SLA penalty or escalation required. (Score: 85, Owner: Rohit Verma)",
-    "metadata": {
-      "project_code": "PRJ-001",
-      "type": "raid",
-      "category": "Dependency",
-      "risk_score": 85
-    }
-  },
-  {
-    "index_pos": 7,
-    "chunk_id": "chk_PRJ-001_raid_9",
-    "doc_id": "doc_PRJ-001_raid",
-    "source": "RiskRegisterAdapter",
-    "title": "Critical Task Blocked: Cloud Infrastructure Setup (Azure)",
-    "text": "RAID Item [Dependency] Critical Task Blocked: Cloud Infrastructure Setup (Azure): Task 'Cloud Infrastructure Setup (Azure)' is blocked. Details: CloudSphere Inc. has not delivered the contracted API gateway components and network peering configuration. Original delivery commitment was Week 28 (14 Jul 2026). No confirmed revised delivery date has been provided as of 07 Aug 2026. (Score: 85, Owner: Rohit Verma)",
-    "metadata": {
-      "project_code": "PRJ-001",
-      "type": "raid",
-      "category": "Dependency",
-      "risk_score": 85
-    }
-  },
-  {
-    "index_pos": 8,
-    "chunk_id": "chk_PRJ-001_comm_15",
+    "chunk_id": "chk_PRJ-001_comm_25",
     "doc_id": "doc_PRJ-001_comms",
     "source": "ChatAdapter",
     "title": "Chat from Amit Joshi",
@@ -123,8 +81,8 @@
     }
   },
   {
-    "index_pos": 9,
-    "chunk_id": "chk_PRJ-001_comm_16",
+    "index_pos": 6,
+    "chunk_id": "chk_PRJ-001_comm_26",
     "doc_id": "doc_PRJ-001_comms",
     "source": "ChatAdapter",
     "title": "Chat from Vendor Support",
@@ -134,8 +92,8 @@
     }
   },
   {
-    "index_pos": 10,
-    "chunk_id": "chk_PRJ-001_comm_17",
+    "index_pos": 7,
+    "chunk_id": "chk_PRJ-001_comm_27",
     "doc_id": "doc_PRJ-001_comms",
     "source": "ChatAdapter",
     "title": "Chat from Sneha Iyer",
@@ -145,7 +103,7 @@
     }
   },
   {
-    "index_pos": 11,
+    "index_pos": 8,
     "chunk_id": "chk_PRJ-001_doc_mobile_compliance.txt_0",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -158,7 +116,7 @@
     }
   },
   {
-    "index_pos": 12,
+    "index_pos": 9,
     "chunk_id": "chk_PRJ-001_doc_mobile_compliance.txt_1",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -171,7 +129,7 @@
     }
   },
   {
-    "index_pos": 13,
+    "index_pos": 10,
     "chunk_id": "chk_PRJ-001_doc_mobile_compliance.txt_2",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -184,7 +142,7 @@
     }
   },
   {
-    "index_pos": 14,
+    "index_pos": 11,
     "chunk_id": "chk_PRJ-001_doc_orion_sow.txt_0",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -197,7 +155,7 @@
     }
   },
   {
-    "index_pos": 15,
+    "index_pos": 12,
     "chunk_id": "chk_PRJ-001_doc_orion_sow.txt_1",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -210,7 +168,7 @@
     }
   },
   {
-    "index_pos": 16,
+    "index_pos": 13,
     "chunk_id": "chk_PRJ-001_doc_orion_sow.txt_2",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -223,7 +181,7 @@
     }
   },
   {
-    "index_pos": 17,
+    "index_pos": 14,
     "chunk_id": "chk_PRJ-001_doc_orion_sow.txt_3",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -236,7 +194,7 @@
     }
   },
   {
-    "index_pos": 18,
+    "index_pos": 15,
     "chunk_id": "chk_PRJ-001_doc_orion_sow.txt_4",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -249,7 +207,7 @@
     }
   },
   {
-    "index_pos": 19,
+    "index_pos": 16,
     "chunk_id": "chk_PRJ-001_doc_pegasus_architecture.txt_0",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -262,7 +220,7 @@
     }
   },
   {
-    "index_pos": 20,
+    "index_pos": 17,
     "chunk_id": "chk_PRJ-001_doc_pegasus_architecture.txt_1",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -275,7 +233,7 @@
     }
   },
   {
-    "index_pos": 21,
+    "index_pos": 18,
     "chunk_id": "chk_PRJ-001_doc_pegasus_architecture.txt_2",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -288,7 +246,7 @@
     }
   },
   {
-    "index_pos": 22,
+    "index_pos": 19,
     "chunk_id": "chk_PRJ-001_doc_risk_sop.txt_0",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -301,7 +259,7 @@
     }
   },
   {
-    "index_pos": 23,
+    "index_pos": 20,
     "chunk_id": "chk_PRJ-001_doc_risk_sop.txt_1",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -314,7 +272,7 @@
     }
   },
   {
-    "index_pos": 24,
+    "index_pos": 21,
     "chunk_id": "chk_PRJ-001_doc_risk_sop.txt_2",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -327,7 +285,7 @@
     }
   },
   {
-    "index_pos": 25,
+    "index_pos": 22,
     "chunk_id": "chk_PRJ-001_doc_risk_sop.txt_3",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -340,7 +298,7 @@
     }
   },
   {
-    "index_pos": 26,
+    "index_pos": 23,
     "chunk_id": "chk_PRJ-001_doc_risk_sop.txt_4",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -353,7 +311,7 @@
     }
   },
   {
-    "index_pos": 27,
+    "index_pos": 24,
     "chunk_id": "chk_PRJ-001_doc_security_policy.txt_0",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -366,7 +324,7 @@
     }
   },
   {
-    "index_pos": 28,
+    "index_pos": 25,
     "chunk_id": "chk_PRJ-001_doc_security_policy.txt_1",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -379,7 +337,7 @@
     }
   },
   {
-    "index_pos": 29,
+    "index_pos": 26,
     "chunk_id": "chk_PRJ-001_doc_security_policy.txt_2",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -392,7 +350,7 @@
     }
   },
   {
-    "index_pos": 30,
+    "index_pos": 27,
     "chunk_id": "chk_PRJ-001_doc_security_policy.txt_3",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -405,7 +363,7 @@
     }
   },
   {
-    "index_pos": 31,
+    "index_pos": 28,
     "chunk_id": "chk_PRJ-001_doc_security_policy.txt_4",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",

@@ -32,46 +32,32 @@
     "chunk_id": "chk_PRJ-002_raid_3",
     "doc_id": "doc_PRJ-002_raid",
     "source": "RiskRegisterAdapter",
-    "title": "Legacy System Data Compatibility Assumption",
-    "text": "RAID Item [Assumption] Legacy System Data Compatibility Assumption: Assumed legacy Oracle DB tables contain pre-cleansed UTF-8 string entries. (Score: 60, Owner: Sneha Iyer)",
+    "title": "Legacy Oracle Database Schema Encoding Drift",
+    "text": "RAID Item [Risk] Legacy Oracle Database Schema Encoding Drift: Legacy database character encoding mismatches cause ETL pipeline mapping failures. (Score: 80, Owner: Amit Joshi)",
     "metadata": {
       "project_code": "PRJ-002",
       "type": "raid",
-      "category": "Assumption",
-      "risk_score": 60
+      "category": "Risk",
+      "risk_score": 80
     }
   },
   {
     "index_pos": 3,
-    "chunk_id": "chk_PRJ-002_raid_10",
+    "chunk_id": "chk_PRJ-002_raid_4",
     "doc_id": "doc_PRJ-002_raid",
     "source": "RiskRegisterAdapter",
-    "title": "Critical Task Blocked: Data Migration Planning and Design",
-    "text": "RAID Item [Dependency] Critical Task Blocked: Data Migration Planning and Design: Task 'Data Migration Planning and Design' is blocked. Details: Data quality audit in progress: 43,847 records in GL_ACCOUNTS table have null mandatory fields (cost_centre, profit_centre, account_type). Migration design cannot be finalised until audit is complete and remediation plan is approved by Finance Director. (Score: 85, Owner: Amit Joshi)",
+    "title": "ERP Middleware Endpoint Compatibility",
+    "text": "RAID Item [Assumption] ERP Middleware Endpoint Compatibility: Assumed third-party ERP SOAP endpoints match OpenAPI REST specifications. (Score: 65, Owner: Amit Joshi)",
     "metadata": {
       "project_code": "PRJ-002",
       "type": "raid",
-      "category": "Dependency",
-      "risk_score": 85
+      "category": "Assumption",
+      "risk_score": 65
     }
   },
   {
     "index_pos": 4,
-    "chunk_id": "chk_PRJ-002_raid_11",
-    "doc_id": "doc_PRJ-002_raid",
-    "source": "RiskRegisterAdapter",
-    "title": "Critical Data Anomaly in GL_ACCOUNTS Table",
-    "text": "RAID Item [Dependency] Critical Data Anomaly in GL_ACCOUNTS Table: Null mandatory fields discovered in GL_ACCOUNTS migration scope. Data migration design suspended pending remediation. (Score: 85, Owner: Amit Joshi)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "raid",
-      "category": "Dependency",
-      "risk_score": 85
-    }
-  },
-  {
-    "index_pos": 5,
-    "chunk_id": "chk_PRJ-002_comm_18",
+    "chunk_id": "chk_PRJ-002_comm_28",
     "doc_id": "doc_PRJ-002_comms",
     "source": "ChatAdapter",
     "title": "Chat from Sneha Iyer",
@@ -81,8 +67,8 @@
     }
   },
   {
-    "index_pos": 6,
-    "chunk_id": "chk_PRJ-002_comm_19",
+    "index_pos": 5,
+    "chunk_id": "chk_PRJ-002_comm_29",
     "doc_id": "doc_PRJ-002_comms",
     "source": "ChatAdapter",
     "title": "Chat from Amit Joshi",
@@ -92,7 +78,7 @@
     }
   },
   {
-    "index_pos": 7,
+    "index_pos": 6,
     "chunk_id": "chk_PRJ-002_doc_mobile_compliance.txt_0",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -105,7 +91,7 @@
     }
   },
   {
-    "index_pos": 8,
+    "index_pos": 7,
     "chunk_id": "chk_PRJ-002_doc_mobile_compliance.txt_1",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -118,7 +104,7 @@
     }
   },
   {
-    "index_pos": 9,
+    "index_pos": 8,
     "chunk_id": "chk_PRJ-002_doc_mobile_compliance.txt_2",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -131,7 +117,7 @@
     }
   },
   {
-    "index_pos": 10,
+    "index_pos": 9,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_0",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -144,7 +130,7 @@
     }
   },
   {
-    "index_pos": 11,
+    "index_pos": 10,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_1",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -157,7 +143,7 @@
     }
   },
   {
-    "index_pos": 12,
+    "index_pos": 11,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_2",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -170,7 +156,7 @@
     }
   },
   {
-    "index_pos": 13,
+    "index_pos": 12,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_3",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -183,7 +169,7 @@
     }
   },
   {
-    "index_pos": 14,
+    "index_pos": 13,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_4",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -196,7 +182,7 @@
     }
   },
   {
-    "index_pos": 15,
+    "index_pos": 14,
     "chunk_id": "chk_PRJ-002_doc_pegasus_architecture.txt_0",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -209,7 +195,7 @@
     }
   },
   {
-    "index_pos": 16,
+    "index_pos": 15,
     "chunk_id": "chk_PRJ-002_doc_pegasus_architecture.txt_1",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -222,7 +208,7 @@
     }
   },
   {
-    "index_pos": 17,
+    "index_pos": 16,
     "chunk_id": "chk_PRJ-002_doc_pegasus_architecture.txt_2",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -235,7 +221,7 @@
     }
   },
   {
-    "index_pos": 18,
+    "index_pos": 17,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_0",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -248,7 +234,7 @@
     }
   },
   {
-    "index_pos": 19,
+    "index_pos": 18,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_1",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -261,7 +247,7 @@
     }
   },
   {
-    "index_pos": 20,
+    "index_pos": 19,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_2",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -274,7 +260,7 @@
     }
   },
   {
-    "index_pos": 21,
+    "index_pos": 20,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_3",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -287,7 +273,7 @@
     }
   },
   {
-    "index_pos": 22,
+    "index_pos": 21,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_4",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -300,7 +286,7 @@
     }
   },
   {
-    "index_pos": 23,
+    "index_pos": 22,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_0",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -313,7 +299,7 @@
     }
   },
   {
-    "index_pos": 24,
+    "index_pos": 23,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_1",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -326,7 +312,7 @@
     }
   },
   {
-    "index_pos": 25,
+    "index_pos": 24,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_2",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -339,7 +325,7 @@
     }
   },
   {
-    "index_pos": 26,
+    "index_pos": 25,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_3",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -352,7 +338,7 @@
     }
   },
   {
-    "index_pos": 27,
+    "index_pos": 26,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_4",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",

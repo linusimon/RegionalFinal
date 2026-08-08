@@ -29,11 +29,11 @@
   },
   {
     "index_pos": 2,
-    "chunk_id": "chk_PRJ-005_raid_6",
+    "chunk_id": "chk_PRJ-005_raid_9",
     "doc_id": "doc_PRJ-005_raid",
     "source": "RiskRegisterAdapter",
-    "title": "Operational Handover Sign-off",
-    "text": "RAID Item [Dependency] Operational Handover Sign-off: Final project closure requires sign-off from Enterprise SecOps team. (Score: 35, Owner: Rohit Verma)",
+    "title": "SecOps Disaster Recovery Audit & Handover Sign-off",
+    "text": "RAID Item [Dependency] SecOps Disaster Recovery Audit & Handover Sign-off: Final project closure requires formal SecOps disaster recovery failover sign-off. (Score: 35, Owner: Rohit Verma)",
     "metadata": {
       "project_code": "PRJ-005",
       "type": "raid",
@@ -43,7 +43,7 @@
   },
   {
     "index_pos": 3,
-    "chunk_id": "chk_PRJ-005_comm_24",
+    "chunk_id": "chk_PRJ-005_comm_34",
     "doc_id": "doc_PRJ-005_comms",
     "source": "ChatAdapter",
     "title": "Chat from SecOps Auditor",
