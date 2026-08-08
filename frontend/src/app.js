@@ -26,14 +26,14 @@ const state = {
   nodeTraces: [],
   isTraceExpanded: false,
   isCustomizeModalOpen: false,
-  dashboardWidgetOrder: ['kpis', 'flowchart', 'heatmap', 'aiAnalyse', 'breakdown'],
+  dashboardWidgetOrder: ['kpis', 'heatmap', 'aiAnalyse', 'breakdown'],
   widgetVisibility: {
     kpis: true,
-    flowchart: true,
     heatmap: true,
     aiAnalyse: true,
     breakdown: true
   },
+
   chatMessages: [],
   chatNodeTraces: [],
   chatInput: '',
@@ -519,10 +519,6 @@ function renderApp() {
             <span class="material-symbols-outlined">dashboard</span>
             <span>Dashboard</span>
           </button>
-          <button class="nav-link ${state.activeTab === 'projects' ? 'active' : ''}" onclick="switchTab('projects')">
-            <span class="material-symbols-outlined">assignment</span>
-            <span>Projects</span>
-          </button>
           <button class="nav-link ${state.activeTab === 'raid' ? 'active' : ''}" onclick="switchTab('raid')">
             <span class="material-symbols-outlined">warning</span>
             <span>Risk Center</span>
@@ -541,6 +537,10 @@ function renderApp() {
             <span class="material-symbols-outlined">smart_toy</span>
             <span>AI Assistant</span>
           </button>
+          <button class="nav-link ${state.activeTab === 'projects' ? 'active' : ''}" onclick="switchTab('projects')">
+            <span class="material-symbols-outlined">assignment</span>
+            <span>Projects</span>
+          </button>
           ${isAdminRole ? `
             <button class="nav-link ${state.activeTab === 'admin' ? 'active' : ''}" onclick="switchTab('admin')">
               <span class="material-symbols-outlined">settings</span>
@@ -548,6 +548,7 @@ function renderApp() {
             </button>
           ` : ''}
           <button class="nav-link" onclick="logoutUser()" style="margin-top:auto">
+
             <span class="material-symbols-outlined">logout</span>
             <span>Sign Out</span>
           </button>
@@ -913,27 +914,10 @@ function renderDashboardTab(currentProject) {
           </table>
         </div>
       </div>
-    `,
-
-    flowchart: `
-      <div class="card-box">
-        <div class="card-box-header">
-          <div class="card-box-title">Critical Path Dependency Map Flowchart (${currentProject.code})</div>
-        </div>
-        <div class="flow-chain">
-          <div class="flow-step completed">Requirements Gathering<br><small style="color:#059669">Completed</small></div>
-          <span class="material-symbols-outlined" style="color:var(--outline)">arrow_forward</span>
-          <div class="flow-step completed">Design Review<br><small style="color:#059669">Completed</small></div>
-          <span class="material-symbols-outlined" style="color:var(--outline)">arrow_forward</span>
-          <div class="flow-step blocked">API Integration<br><small style="color:#dc2626">Blocked (Score 88)</small></div>
-          <span class="material-symbols-outlined" style="color:var(--outline)">arrow_forward</span>
-          <div class="flow-step in-progress">System Testing<br><small style="color:var(--primary-container)">In Progress</small></div>
-          <span class="material-symbols-outlined" style="color:var(--outline)">arrow_forward</span>
-          <div class="flow-step">Deployment<br><small style="color:var(--outline)">Not Started</small></div>
-        </div>
-      </div>
     `
   };
+
+
 
   let contentBuffer = '';
   for (let i = 0; i < state.dashboardWidgetOrder.length; i++) {
@@ -1136,17 +1120,36 @@ async function confirmCreateDiscoveredRisk() {
 // ----------------------------------------------------
 // Risk Center Action Handlers & Risk Action Page View
 // ----------------------------------------------------
-function navigateToCommunicateForRisk(raidId) {
+async function navigateToCommunicateForRisk(raidId) {
   const item = state.raidItems ? state.raidItems.find(r => r.id === raidId) : null;
-  if (item) {
-    state.draftEmailSubject = `[ACTION REQUIRED] Risk Alert: ${item.title}`;
-    state.draftEmailBody = `Dear Team,\n\nPlease review and take immediate action on the following risk item:\n\nTitle: ${item.title}\nCategory: ${item.category}\nLikelihood / Impact: ${item.likelihood} / ${item.impact}\nRisk Score: ${item.risk_score}/100\nRoot Cause: ${item.root_cause || 'Under Investigation'}\nAssigned Owner: ${item.owner_name}\n\nBest regards,\nProject Management Office`;
-    state.draftEmailRecipientRole = 'Project Manager';
-    state.draftEmailRecipient = 'linusimon@gmail.com';
+  const projectCode = state.selectedProjectCode || 'PRJ-001';
+
+  const subject = item ? `[ACTION REQUIRED] Risk Alert: ${item.title}` : `[ACTION REQUIRED] Risk Communication Alert`;
+  const body = item ? `Dear Team,\n\nPlease review and take immediate action on the following risk item:\n\nTitle: ${item.title}\nCategory: ${item.category}\nLikelihood / Impact: ${item.likelihood} / ${item.impact}\nRisk Score: ${item.risk_score}/100\nRoot Cause: ${item.root_cause || 'Under Investigation'}\nAssigned Owner: ${item.owner_name}\n\nBest regards,\nProject Management Office` : `Dear Team,\n\nPlease review project risk status.\n\nBest regards,\nPMO`;
+
+  const res = await apiPost('/emails', {
+    project_code: projectCode,
+    raid_id: raidId,
+    recipient_role: 'Project Manager',
+    recipient_email: 'linusimon@gmail.com',
+    subject: subject,
+    body: body
+  });
+
+  if (res && res.status === 'success') {
+    showToast(`New Communication #${res.email.id} created in Communication Center!`, 'success');
+    await refreshWorkspaceData();
+    state.activeTab = 'comms';
+    renderApp();
+    if (res.email && res.email.id) {
+      openApprovalModal(res.email.id);
+    }
+  } else {
+    state.activeTab = 'comms';
+    renderApp();
   }
-  state.activeTab = 'comms';
-  renderApp();
 }
+
 
 async function navigateToRiskActionPage(raidId) {
   state.selectedRaidIdForAction = raidId;
@@ -1617,6 +1620,18 @@ function exportReportToPDF() {
 
 // 5. Reports Tab View
 function renderReportsTab(currentProject) {
+  if (!state.projectAiOverviewMap) state.projectAiOverviewMap = {};
+  const overviewData = state.projectAiOverviewMap[currentProject.code];
+  if (!overviewData && !state.isFetchingAiOverview) {
+    state.isFetchingAiOverview = true;
+    fetchProjectAiOverview(currentProject.code).then(() => {
+      state.isFetchingAiOverview = false;
+    });
+  }
+
+  const raidItemsForProj = state.raidItems.filter(r => r.project_id === currentProject.id || r.project_code === currentProject.code);
+  const highRiskCount = raidItemsForProj.filter(r => (r.risk_score || 0) >= 70).length;
+
   return `
     <div class="page-header">
       <div>
@@ -1631,28 +1646,46 @@ function renderReportsTab(currentProject) {
     <div class="card-box" id="executiveSummaryReportContainer" style="background:#fff; padding:24px; border-radius:12px; border:1px solid var(--outline-variant);">
       <div class="card-box-title" style="margin-bottom:12px; font-size:18px; font-weight:700;">Executive Program Summary (${currentProject.code})</div>
       <p style="line-height:1.6; color:var(--on-surface)">
-        Program <strong>${currentProject.name} (${currentProject.code})</strong> is currently in the <strong>${currentProject.lifecycle_phase}</strong> phase with an overall progress completion rate of <strong>${currentProject.progress_pct}%</strong>. The current program risk profile is categorized as <span class="chip chip-warning">Medium Risk</span>.
+        Program <strong>${currentProject.name} (${currentProject.code})</strong> is currently in the <strong>${currentProject.lifecycle_phase}</strong> phase with an overall progress completion rate of <strong>${currentProject.progress_pct}%</strong>. The current program risk profile is categorized as <span class="chip ${currentProject.health_status === 'Healthy' ? 'chip-success' : 'chip-warning'}">${currentProject.health_status}</span>.
       </p>
 
       <div class="grid-2col" style="margin-top:20px">
         <div style="background:var(--surface-container-low); padding:16px; border-radius:8px">
           <h4 style="font-weight:700; margin-bottom:8px">Key Performance Indicators</h4>
           <ul style="padding-left:20px; line-height:1.8">
-            <li>Open Items: <strong>${state.raidItems.length}</strong></li>
-            <li>High Severity Risks (&gt;70): <strong>${state.raidItems.filter(r => r.risk_score>=70).length}</strong></li>
+            <li>Open Items: <strong>${raidItemsForProj.length}</strong></li>
+            <li>High Severity Risks (&gt;70): <strong>${highRiskCount}</strong></li>
+            <li>Overall Progress: <strong>${currentProject.progress_pct}%</strong></li>
+            <li>Lifecycle Phase: <strong>${currentProject.lifecycle_phase}</strong></li>
           </ul>
         </div>
 
         <div style="background:var(--surface-container-low); padding:16px; border-radius:8px">
-          <h4 style="font-weight:700; margin-bottom:8px">Risk & Mitigation Summary</h4>
-          <p style="font-size:13px; color:var(--on-surface-variant)">
-            The multi-agent system identified third-party API integration delays as the primary bottleneck. Mitigation strategy recommends deploying mock servers and initiating parallel sprint tasks.
-          </p>
+          <h4 style="font-weight:700; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+            <span>Risk &amp; Mitigation Summary</span>
+            <span class="chip chip-info" style="font-size:10px;">AI Analysis</span>
+          </h4>
+          ${overviewData ? `
+            <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin:0;">
+              ${overviewData.summary}
+            </p>
+            <div style="display:flex; gap:12px; margin-top:12px; padding-top:8px; border-top:1px solid var(--outline-variant); font-size:11px; color:var(--on-surface-variant);">
+              <span>📊 RAID Items: <strong>${overviewData.raid_count}</strong></span>
+              <span>✉ Emails: <strong>${overviewData.email_count}</strong></span>
+              <span>📋 WBS Tasks: <strong>${overviewData.task_count}</strong></span>
+            </div>
+          ` : `
+            <div style="padding:10px; text-align:center; color:var(--on-surface-variant); font-size:12px;">
+              <span class="material-symbols-outlined spinning" style="font-size:18px; color:var(--primary-container)">progress_activity</span>
+              <div style="margin-top:4px;">Synthesizing raid_items, emails, & WBS tasks via LLM...</div>
+            </div>
+          `}
         </div>
       </div>
     </div>
   `;
 }
+
 
 // 6. AI Assistant & Voice Chat Tab View — Enterprise Chat Workspace
 function renderChatTab() {

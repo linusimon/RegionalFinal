@@ -36,6 +36,53 @@ def get_emails():
         'emails': [e.to_dict() for e in emails]
     }), 200
 
+@emails_bp.route('', methods=['POST'])
+@jwt_required()
+def create_email_draft():
+    """Creates a new PENDING email draft communication record in app.db."""
+    data = request.get_json() or {}
+    project_code = data.get('project_code', 'PRJ-001').upper().strip()
+    
+    from backend.app.db.models import Project
+    project = Project.query.filter_by(code=project_code).first()
+    project_id = project.id if project else 1
+
+    raid_id = data.get('raid_id')
+    recipient_role = data.get('recipient_role', 'Project Manager')
+    recipient_email = data.get('recipient_email', 'linusimon@gmail.com')
+    subject = data.get('subject', 'Risk Communication Alert')
+    body = data.get('body', '')
+
+    draft = EmailDraft(
+        project_id=project_id,
+        raid_id=raid_id,
+        recipient_role=recipient_role,
+        recipient_email=recipient_email,
+        subject=subject,
+        body=body,
+        status='PENDING',
+        created_by='PM AI Risk Center'
+    )
+    db.session.add(draft)
+
+    claims = get_jwt()
+    audit = AuditLog(
+        user_name=claims.get('username', 'User'),
+        user_role=claims.get('role', 'User'),
+        action='CREATE_EMAIL_DRAFT',
+        target_type='EmailDraft',
+        details=f'Created email draft for project {project_code}: {subject}'
+    )
+    db.session.add(audit)
+    db.session.commit()
+
+    return jsonify({
+        'status': 'success',
+        'message': 'Communication record created successfully',
+        'email': draft.to_dict()
+    }), 201
+
+
 @emails_bp.route('/<int:email_id>', methods=['GET'])
 @jwt_required()
 def get_email_detail(email_id):
