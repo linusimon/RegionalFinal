@@ -29,90 +29,6 @@
   },
   {
     "index_pos": 2,
-    "chunk_id": "chk_PRJ-002_task_21",
-    "doc_id": "doc_PRJ-002_tasks",
-    "source": "TaskAdapter",
-    "title": "LangGraph VectorImport Remediation: Technical Gateway & Stub Integration for Legacy System Data Compatibility Assumption",
-    "text": "WBS Task [PRJ-002-R3-T1] LangGraph VectorImport Remediation: Technical Gateway & Stub Integration for Legacy System Data Compatibility Assumption (Status: Completed, Priority: High)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "task",
-      "wbs_code": "PRJ-002-R3-T1",
-      "status": "Completed"
-    }
-  },
-  {
-    "index_pos": 3,
-    "chunk_id": "chk_PRJ-002_task_22",
-    "doc_id": "doc_PRJ-002_tasks",
-    "source": "TaskAdapter",
-    "title": "LangGraph Governance Clearance: Fast-Track Compliance Audit for Legacy System Data Compatibility Assumption",
-    "text": "WBS Task [PRJ-002-R3-T2] LangGraph Governance Clearance: Fast-Track Compliance Audit for Legacy System Data Compatibility Assumption (Status: Not Started, Priority: High)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "task",
-      "wbs_code": "PRJ-002-R3-T2",
-      "status": "Not Started"
-    }
-  },
-  {
-    "index_pos": 4,
-    "chunk_id": "chk_PRJ-002_task_23",
-    "doc_id": "doc_PRJ-002_tasks",
-    "source": "TaskAdapter",
-    "title": "LangGraph SLA & Schedule Realignment: Vendor Escalation for Legacy System Data Compatibility Assumption",
-    "text": "WBS Task [PRJ-002-R3-T3] LangGraph SLA & Schedule Realignment: Vendor Escalation for Legacy System Data Compatibility Assumption (Status: Not Started, Priority: High)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "task",
-      "wbs_code": "PRJ-002-R3-T3",
-      "status": "Not Started"
-    }
-  },
-  {
-    "index_pos": 5,
-    "chunk_id": "chk_PRJ-002_task_24",
-    "doc_id": "doc_PRJ-002_tasks",
-    "source": "TaskAdapter",
-    "title": "LangGraph VectorImport Remediation: Technical Gateway & Stub Integration for Critical Task Blocked: Data Migration Planning and Design",
-    "text": "WBS Task [PRJ-002-R10-T1] LangGraph VectorImport Remediation: Technical Gateway & Stub Integration for Critical Task Blocked: Data Migration Planning and Design (Status: Completed, Priority: High)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "task",
-      "wbs_code": "PRJ-002-R10-T1",
-      "status": "Completed"
-    }
-  },
-  {
-    "index_pos": 6,
-    "chunk_id": "chk_PRJ-002_task_25",
-    "doc_id": "doc_PRJ-002_tasks",
-    "source": "TaskAdapter",
-    "title": "LangGraph Governance Clearance: Fast-Track Compliance Audit for Critical Task Blocked: Data Migration Planning and Design",
-    "text": "WBS Task [PRJ-002-R10-T2] LangGraph Governance Clearance: Fast-Track Compliance Audit for Critical Task Blocked: Data Migration Planning and Design (Status: Completed, Priority: High)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "task",
-      "wbs_code": "PRJ-002-R10-T2",
-      "status": "Completed"
-    }
-  },
-  {
-    "index_pos": 7,
-    "chunk_id": "chk_PRJ-002_task_26",
-    "doc_id": "doc_PRJ-002_tasks",
-    "source": "TaskAdapter",
-    "title": "LangGraph SLA & Schedule Realignment: Vendor Escalation for Critical Task Blocked: Data Migration Planning and Design",
-    "text": "WBS Task [PRJ-002-R10-T3] LangGraph SLA & Schedule Realignment: Vendor Escalation for Critical Task Blocked: Data Migration Planning and Design (Status: Completed, Priority: High)",
-    "metadata": {
-      "project_code": "PRJ-002",
-      "type": "task",
-      "wbs_code": "PRJ-002-R10-T3",
-      "status": "Completed"
-    }
-  },
-  {
-    "index_pos": 8,
     "chunk_id": "chk_PRJ-002_raid_3",
     "doc_id": "doc_PRJ-002_raid",
     "source": "RiskRegisterAdapter",
@@ -126,7 +42,7 @@
     }
   },
   {
-    "index_pos": 9,
+    "index_pos": 3,
     "chunk_id": "chk_PRJ-002_raid_10",
     "doc_id": "doc_PRJ-002_raid",
     "source": "RiskRegisterAdapter",
@@ -140,7 +56,21 @@
     }
   },
   {
-    "index_pos": 10,
+    "index_pos": 4,
+    "chunk_id": "chk_PRJ-002_raid_11",
+    "doc_id": "doc_PRJ-002_raid",
+    "source": "RiskRegisterAdapter",
+    "title": "Critical Data Anomaly in GL_ACCOUNTS Table",
+    "text": "RAID Item [Dependency] Critical Data Anomaly in GL_ACCOUNTS Table: Null mandatory fields discovered in GL_ACCOUNTS migration scope. Data migration design suspended pending remediation. (Score: 85, Owner: Amit Joshi)",
+    "metadata": {
+      "project_code": "PRJ-002",
+      "type": "raid",
+      "category": "Dependency",
+      "risk_score": 85
+    }
+  },
+  {
+    "index_pos": 5,
     "chunk_id": "chk_PRJ-002_comm_18",
     "doc_id": "doc_PRJ-002_comms",
     "source": "ChatAdapter",
@@ -151,7 +81,7 @@
     }
   },
   {
-    "index_pos": 11,
+    "index_pos": 6,
     "chunk_id": "chk_PRJ-002_comm_19",
     "doc_id": "doc_PRJ-002_comms",
     "source": "ChatAdapter",
@@ -162,7 +92,7 @@
     }
   },
   {
-    "index_pos": 12,
+    "index_pos": 7,
     "chunk_id": "chk_PRJ-002_doc_mobile_compliance.txt_0",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -175,7 +105,7 @@
     }
   },
   {
-    "index_pos": 13,
+    "index_pos": 8,
     "chunk_id": "chk_PRJ-002_doc_mobile_compliance.txt_1",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -188,7 +118,7 @@
     }
   },
   {
-    "index_pos": 14,
+    "index_pos": 9,
     "chunk_id": "chk_PRJ-002_doc_mobile_compliance.txt_2",
     "doc_id": "doc_file_mobile_compliance.txt",
     "source": "FileAdapter",
@@ -201,7 +131,7 @@
     }
   },
   {
-    "index_pos": 15,
+    "index_pos": 10,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_0",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -214,7 +144,7 @@
     }
   },
   {
-    "index_pos": 16,
+    "index_pos": 11,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_1",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -227,7 +157,7 @@
     }
   },
   {
-    "index_pos": 17,
+    "index_pos": 12,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_2",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -240,7 +170,7 @@
     }
   },
   {
-    "index_pos": 18,
+    "index_pos": 13,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_3",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -253,7 +183,7 @@
     }
   },
   {
-    "index_pos": 19,
+    "index_pos": 14,
     "chunk_id": "chk_PRJ-002_doc_orion_sow.txt_4",
     "doc_id": "doc_file_orion_sow.txt",
     "source": "FileAdapter",
@@ -266,7 +196,7 @@
     }
   },
   {
-    "index_pos": 20,
+    "index_pos": 15,
     "chunk_id": "chk_PRJ-002_doc_pegasus_architecture.txt_0",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -279,7 +209,7 @@
     }
   },
   {
-    "index_pos": 21,
+    "index_pos": 16,
     "chunk_id": "chk_PRJ-002_doc_pegasus_architecture.txt_1",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -292,7 +222,7 @@
     }
   },
   {
-    "index_pos": 22,
+    "index_pos": 17,
     "chunk_id": "chk_PRJ-002_doc_pegasus_architecture.txt_2",
     "doc_id": "doc_file_pegasus_architecture.txt",
     "source": "FileAdapter",
@@ -305,7 +235,7 @@
     }
   },
   {
-    "index_pos": 23,
+    "index_pos": 18,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_0",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -318,7 +248,7 @@
     }
   },
   {
-    "index_pos": 24,
+    "index_pos": 19,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_1",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -331,7 +261,7 @@
     }
   },
   {
-    "index_pos": 25,
+    "index_pos": 20,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_2",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -344,7 +274,7 @@
     }
   },
   {
-    "index_pos": 26,
+    "index_pos": 21,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_3",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -357,7 +287,7 @@
     }
   },
   {
-    "index_pos": 27,
+    "index_pos": 22,
     "chunk_id": "chk_PRJ-002_doc_risk_sop.txt_4",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -370,7 +300,7 @@
     }
   },
   {
-    "index_pos": 28,
+    "index_pos": 23,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_0",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -383,7 +313,7 @@
     }
   },
   {
-    "index_pos": 29,
+    "index_pos": 24,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_1",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -396,7 +326,7 @@
     }
   },
   {
-    "index_pos": 30,
+    "index_pos": 25,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_2",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -409,7 +339,7 @@
     }
   },
   {
-    "index_pos": 31,
+    "index_pos": 26,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_3",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -422,7 +352,7 @@
     }
   },
   {
-    "index_pos": 32,
+    "index_pos": 27,
     "chunk_id": "chk_PRJ-002_doc_security_policy.txt_4",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
