@@ -13,7 +13,7 @@ class TCSGenAIClient:
     def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         self.api_key = api_key or os.getenv('TCS_GENAI_API_KEY', 'tcs_genai_mock_key_998877')
         raw_url = base_url or os.getenv('TCS_GENAI_BASE_URL') or os.getenv('TCS_GENAI_ENDPOINT') or 'https://genailab.tcs.in/v1'
-        self.base_url = raw_url.rstrip('/').replace('/api/v1', '/v1')
+        self.base_url = raw_url.rstrip('/')
         self.model_name = os.getenv('DEFAULT_LLM_MODEL', 'gemini-1.5-pro')
 
     def generate_completion(self, prompt: str, system_prompt: Optional[str] = None, temperature: float = 0.2) -> Dict[str, Any]:
@@ -91,16 +91,16 @@ class TCSGenAIClient:
                 'status': 'SUCCESS',
                 'content': fallback_json,
                 'model': self.model_name,
-                'usage': {'prompt_tokens': 320, 'completion_tokens': 150, 'total_tokens': 470},
-                'cost_usd': 0.00094
+                'usage': {'prompt_tokens': len(prompt.split()), 'completion_tokens': 0, 'total_tokens': len(prompt.split())},
+                'cost_usd': 0.0
             }
 
         return {
             'status': 'SUCCESS',
             'content': f"[TCS GenAI Response] Analyzed request using model {self.model_name}: Grounded analysis verified across project plans, SOW policies, and risk registers.",
             'model': self.model_name,
-            'usage': {'prompt_tokens': 320, 'completion_tokens': 150, 'total_tokens': 470},
-            'cost_usd': 0.00094
+            'usage': {'prompt_tokens': 0, 'completion_tokens': 0, 'total_tokens': 0},
+            'cost_usd': 0.0
         }
 
     def get_embeddings(self, text: str) -> List[float]:

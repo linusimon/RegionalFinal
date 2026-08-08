@@ -2031,7 +2031,7 @@ async function sendChatMessage(overrideText) {
         project_code: state.selectedProjectCode,
         conversation_history: history,
         user_role: state.currentUser.role,
-        project_data: { code: state.selectedProjectCode, lifecycle_phase: 'Execution' }
+        project_data: { code: state.selectedProjectCode, lifecycle_phase: state.projects.find(p => p.code === state.selectedProjectCode)?.lifecycle_phase || 'Execution' }
       })
     });
 

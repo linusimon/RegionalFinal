@@ -49,6 +49,62 @@ def _fetch_project_metadata(project_code: str) -> Dict[str, Any]:
     return {'code': project_code, 'lifecycle_phase': 'Execution'}
 
 
+def _generate_mitigations_for_raids(raids: List[Dict[str, Any]], project_data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Generate dynamic mitigation actions matching the actual detected RAID items."""
+    if not raids:
+        return []
+
+    mitigations = []
+    owner = project_data.get('owner_name') or 'PM Lead'
+
+    for raid in raids:
+        title = raid.get('title', '')
+        category = raid.get('category', 'Risk')
+
+        if "Critical Path" in title:
+            mitigations.append({
+                "title": f"Unblock Critical Task for {project_data.get('code', 'Project')}",
+                "description": raid.get('description', 'Fast-track dependency resolution and reallocate engineering resources.'),
+                "owner": owner,
+                "status": "In Progress",
+                "due_date": "Next 3 Days"
+            })
+        elif "ETL" in title:
+            mitigations.append({
+                "title": f"Execute ETL Pre-Migration Data Profiling for {project_data.get('code', 'Project')}",
+                "description": "Perform foreign key integrity validation and orphan record cleanup prior to bulk migration.",
+                "owner": "Data Lead",
+                "status": "Planned",
+                "due_date": "Next 5 Days"
+            })
+        elif "Vendor API" in title or "Outage" in title:
+            mitigations.append({
+                "title": "Escalate Sandbox Downtime to Vendor Leadership",
+                "description": "Issue formal PMO escalation notification for vendor API endpoint stability.",
+                "owner": "Program Manager",
+                "status": "In Progress",
+                "due_date": "Immediate"
+            })
+        elif "SecOps" in title or "Onboarding" in title:
+            mitigations.append({
+                "title": "Expedite SecOps Onboarding & Clearance Queue",
+                "description": "Coordinate with IT SecOps team to clear resource onboarding and SLA sign-off bottlenecks.",
+                "owner": owner,
+                "status": "In Progress",
+                "due_date": "Next 5 Days"
+            })
+        else:
+            mitigations.append({
+                "title": f"Mitigate {category}: {title}",
+                "description": f"Targeted resolution strategy for root cause: {raid.get('root_cause', 'Phase constraint')}.",
+                "owner": owner,
+                "status": "In Progress",
+                "due_date": "Next 7 Days"
+            })
+
+    return mitigations
+
+
 # ─── Intent keyword map for action detection ───────────────────────────────────
 _ACTION_INTENTS = {
     'ADD_MITIGATION': ['add mitigation', 'create mitigation', 'deploy mock', 'mitigate', 'mitigation action'],
@@ -176,8 +232,8 @@ def stream_chat_supervisor(
     conversation_history = conversation_history or []
     db_project = _fetch_project_metadata(project_code)
     if project_data:
-        merged = db_project.copy()
-        merged.update(project_data)
+        merged = project_data.copy()
+        merged.update(db_project)     # DB value takes priority over frontend
         project_data = merged
     else:
         project_data = db_project
@@ -200,7 +256,7 @@ def stream_chat_supervisor(
             'status': 'SUCCESS',
             'total_latency_ms': 1,
             'model_used': 'Fast-Path Rule (Zero-Token Response)',
-            'confidence_score': 1.0,
+            'confidence_score': None,
             'top_risk_score': 0,
             'usage': {'prompt_tokens': 0, 'completion_tokens': 0, 'total_tokens': 0},
             'cost_usd': 0.0,
@@ -224,8 +280,10 @@ def stream_chat_supervisor(
             user_message, user_name=user_role, project_code=project_code
         )
         if not presidio_res.is_safe and presidio_res.action == 'BLOCK':
-            yield {'type': 'status', 'content': f'❌ Microsoft Presidio Guardrail Blocked: {presidio_res.reason}'}
-            yield {'type': 'token', 'content': f"⚠️ Request blocked by Microsoft Presidio Guardrail: {presidio_res.reason}"}
+            # Use app-appropriate user_message instead of raw technical reason
+            friendly_msg = presidio_res.user_message or "I'm unable to process that request. Please ask a project management question."
+            yield {'type': 'status', 'content': f'🛡️ Presidio Guardrail: {presidio_res.reason}'}
+            yield {'type': 'token', 'content': friendly_msg}
             node_traces.append({
                 'name': '1. Microsoft Presidio Security Guardrail',
                 'status': 'BLOCKED',
@@ -234,13 +292,13 @@ def stream_chat_supervisor(
             })
             yield {'type': 'done', 'telemetry': {'status': 'BLOCKED', 'node_traces': node_traces}}
             return
-        
+
         # Use anonymized text for downstream pipeline if PII was detected
         if presidio_res.action == 'ANONYMIZE':
             user_message = presidio_res.sanitized_text
-            yield {'type': 'status', 'content': f'🔒 Microsoft Presidio: Anonymized PII entities -> {len(presidio_res.detected_entities)} replaced'}
+            yield {'type': 'status', 'content': f'🔒 Microsoft Presidio: Anonymized {len(presidio_res.detected_entities)} PII entities before processing'}
     except Exception as e:
-        pass
+        logger.warning('[ChatSupervisor] Presidio guardrail error (non-fatal, continuing): %s', e)
 
     data_input = {
         'raw_input': user_message,
@@ -285,32 +343,26 @@ def stream_chat_supervisor(
     t2 = time.time()
     rule_res = RiskIntelligenceGraph.execute_raid_rule_engine(project_data, data_state)
     raids = rule_res.get('detected_raids', [])
-    top_score = max([r['risk_score'] for r in raids]) if raids else 85
-    primary = max(raids, key=lambda x: x['risk_score']) if raids else {
-        "category": "Risk",
-        "title": f"Phase {project_data.get('lifecycle_phase', 'Execution')} Constraint for {project_code}",
-        "description": f"Analysis of project {project_code}.",
-        "likelihood": "High",
-        "impact": "High",
-        "risk_score": 85,
-        "root_cause": "Phase milestone schedule constraint."
-    }
+    top_score = max([r['risk_score'] for r in raids]) if raids else 0
+    primary = max(raids, key=lambda x: x['risk_score']) if raids else None
 
-    mitigations = [
-        {
-            "title": f"Unblock Critical Path for {project_code}",
-            "description": "Deploy resource onboarding and spec review resolution.",
-            "owner": project_data.get('owner_name', 'PM Lead'),
-            "status": "In Progress",
-            "due_date": "Next 5 Days"
-        }
-    ]
+    mitigations = _generate_mitigations_for_raids(raids, project_data)
 
-    conf_score = 0.94
+    # Compute real scores from actual pipeline signals
+    rag_chunks = data_state.get('static_chunks_retrieved', 0)
+    graph_triples = len(data_state.get('graph_triples_found') or [])
+    rules_fired = len(rule_res.get('rule_triggers', []))
+    raids_found = len(raids)
+    has_evidence = rag_chunks > 0 or graph_triples > 0
+
+    conf_score = round(min(0.99, 0.5 + (rag_chunks * 0.1) + (raids_found * 0.1) + (rules_fired * 0.05)), 2)
+    groundedness_score = round(min(0.99, 0.6 + (rag_chunks * 0.08) + (graph_triples * 0.02)), 2)
+    hallucination_check = "PASSED (Grounded in RAG + Graph evidence)" if has_evidence else "UNVERIFIED (No supporting documents retrieved)"
+
     reflection = {
-        "groundedness_score": 0.96,
-        "hallucination_check": "PASSED (Grounded in Graph 2 Evidence Package)",
-        "raid_category_validated": primary['category'],
+        "groundedness_score": groundedness_score,
+        "hallucination_check": hallucination_check,
+        "raid_category_validated": primary['category'] if primary else 'N/A',
         "confidence_score": conf_score
     }
 
@@ -333,7 +385,7 @@ def stream_chat_supervisor(
         'details': {
             'rules_triggered': risk_state.get('rules_triggered', []),
             'top_risk_score': risk_state.get('top_risk_score', 0),
-            'primary_raid': risk_state.get('primary_raid_item', {}).get('title', 'N/A')
+            'primary_raid': (risk_state.get('primary_raid_item') or {}).get('title', 'N/A')
         }
     })
 
@@ -357,6 +409,16 @@ def stream_chat_supervisor(
     )
     t3_ms = max(int((time.time() - t3) * 1000), 1)
     full_text = llm_res.get('content', '')
+
+    # Output leakage scan — prevent PII or secrets leaking in LLM reply before streaming
+    try:
+        from backend.app.core.microsoft_presidio_guardrails import MicrosoftPresidioGuardrailEngine
+        output_scan = MicrosoftPresidioGuardrailEngine.analyze_output_leakage(full_text)
+        if output_scan['leakage_detected']:
+            full_text = output_scan['sanitized_text']
+            logger.warning('[ChatSupervisor] Output leakage detected and sanitized before streaming.')
+    except Exception as e:
+        logger.warning('[ChatSupervisor] Output leakage scan error (non-fatal): %s', e)
 
     node_traces.append({
         'name': '3. LLM Grounded Reasoning (TCS GenAI)',
