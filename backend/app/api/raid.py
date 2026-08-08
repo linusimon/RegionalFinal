@@ -139,8 +139,8 @@ def add_mitigation_action(raid_id):
 def discover_risks_with_ai():
     """
     POST /api/raid/discover-risks
-    Directly invokes VectorImport GraphExecutionService (execute_intelligence & execute_analysis/execute_graph2).
-    No hardcoded data.
+    Invokes Unified RAG & Risk Intelligence Engine over backend/app/vector_store/.
+    Shares the exact same vector store and uploaded documents as Chatbot.
     """
     data = request.get_json() or {}
     project_code = data.get('project_code', 'PRJ-001').strip()
@@ -149,114 +149,96 @@ def discover_risks_with_ai():
     if not project:
         project = Project.query.get(1)
 
-    import sys, os
+    import sys, os, json
     os.environ['LLM_API_KEY'] = os.getenv('TCS_GENAI_API_KEY', 'tcs_genai_mock_key_998877')
-    vector_import_backend = os.path.abspath(os.path.join(os.getcwd(), 'VectorImport', 'backend'))
-    if vector_import_backend not in sys.path:
-        sys.path.insert(0, vector_import_backend)
+    os.environ['LLM_BASE_URL'] = os.getenv('TCS_GENAI_BASE_URL', 'https://genailab.tcs.in/v1')
+    os.environ['LLM_MODEL'] = os.getenv('DEFAULT_LLM_MODEL', 'genailab-maas-gpt-4o')
 
-    pid_map = {'PRJ-001': '1', 'PRJ-002': '2', 'PRJ-003': '3', 'PRJ-004': '1', 'PRJ-005': '2'}
-    v_pid = pid_map.get(project_code, '1')
+    # 1. Sync & Index Unified Vector Store for project (shared with Chat)
+    from backend.app.services.vector_importer import VectorImporter
+    importer = VectorImporter()
+    importer.index_project(project_code)
 
-    from services.graph_execution_service import GraphExecutionService
-    svc = GraphExecutionService()
+    safe_code = project_code.replace('-', '_').lower()
+    meta_path = os.path.join(importer.storage_dir, f"project_{safe_code}_metadata.json")
 
-    # 1. Execute Project Intelligence Engine (VectorImport execute_intelligence)
-    intel_res = svc.execute_intelligence(v_pid)
+    project_chunks = []
+    if os.path.exists(meta_path):
+        try:
+            with open(meta_path, 'r', encoding='utf-8') as fh:
+                project_chunks = json.load(fh)
+        except Exception as e:
+            print(f"[DiscoverRisks RAG Read Error] {e}")
 
-    # 2. Execute Graph 2 Decision Intelligence Pipeline (VectorImport execute_analysis)
     discovered_list = []
 
+    # 2. Extract risks from uploaded document text chunks (e.g. GatewayX, SSL, Outage, Latency, Delay)
+    for c in project_chunks:
+        text = c.get('text', '')
+        text_lower = text.lower()
+        title = c.get('title', '')
+        filename = c.get('metadata', {}).get('filename', title)
+
+        # Ignore standard generic SOP files from risk creation
+        if any(skip in filename.lower() for skip in ['risk_sop', 'security_policy']):
+            continue
+
+        if any(kw in text_lower for kw in ['urgent memo', 'outage', 'ssl handshake', 'latency', 'downtime', 'blocked', 'failure']):
+            lines = [l.strip() for l in text.split('\n') if l.strip()]
+            first_line = lines[0] if lines else title
+            if 'Document [' in first_line:
+                first_line = first_line.split(']:')[-1].strip()
+
+            score = 88 if any(k in text_lower for k in ['urgent', 'critical', 'outage', 'latency']) else 75
+            category = 'Issue' if any(k in text_lower for k in ['outage', 'downtime', 'failure']) else 'Risk'
+
+            discovered_list.append({
+                'project_id': project.id,
+                'project_code': project_code,
+                'category': category,
+                'title': f"DISCOVERED: {first_line[:65]}",
+                'description': text[:300],
+                'likelihood': 'High' if score >= 80 else 'Medium',
+                'impact': 'High',
+                'risk_score': score,
+                'owner_name': project.owner_name,
+                'root_cause': f"Extracted from Upload Document ({filename})",
+                'source_feed': f"Unified RAG Store ({filename})"
+            })
+
+    # 3. Execute Graph 2 Risk Intelligence Engine for Phase & Task level risks
     try:
-        analysis_res = svc.execute_graph2(v_pid)
-        report = analysis_res.get('report', {})
-        categorized = report.get('categorized_risks', [])
-        for idx, r in enumerate(categorized):
+        from backend.graphs.risk_graph_adapter import Graph2Adapter
+        g2_res = Graph2Adapter.execute_graph2_for_project(project_code, {'code': project_code, 'lifecycle_phase': project.lifecycle_phase, 'owner_name': project.owner_name})
+        for r in g2_res.get('all_detected_raids', []):
             discovered_list.append({
                 'project_id': project.id,
                 'project_code': project_code,
                 'category': r.get('category', 'Risk'),
-                'title': r.get('title', f'Discovered Risk #{idx+1}'),
+                'title': r.get('title', 'Discovered Risk'),
                 'description': r.get('description', ''),
                 'likelihood': r.get('likelihood', 'High'),
                 'impact': r.get('impact', 'High'),
-                'risk_score': r.get('score', 80),
+                'risk_score': r.get('risk_score', 80),
                 'owner_name': project.owner_name,
-                'root_cause': r.get('root_cause', 'Extracted via VectorImport Intelligence Engine'),
-                'source_feed': 'VectorImport FAISS & Intelligence Engine'
+                'root_cause': r.get('root_cause', 'Phase & Task intelligence analysis'),
+                'source_feed': 'Unified RiskIntelligence Engine'
             })
     except Exception as e:
-        print(f"[VectorImport Graph2 LLM Fallback to Intelligence Signals] {e}")
+        print(f"[Graph2Adapter discover-risks Error] {e}")
 
-    # Extract deterministic_signals from VectorImport Intelligence Engine if LLM endpoint offline
-    if not discovered_list:
-        signals = intel_res.get('deterministic_signals', [])
-        v_proj_name = 'PROJECT_PROG_ALPHA_2026' if v_pid == '1' else ('PROJECT_PROG_BETA_2026' if v_pid == '2' else 'PROJECT_PROG_GAMMA_2026')
-
-        # Load project metadata JSON chunks for exact RAG chunk ID mapping
-        import json, glob
-        v_meta_file = os.path.abspath(os.path.join(os.getcwd(), 'VectorImport', 'backend', 'data', 'vector_store', f"{v_proj_name.lower()}_metadata.json"))
-        project_chunks = []
-        if os.path.exists(v_meta_file):
-            try:
-                with open(v_meta_file, 'r', encoding='utf-8') as fh:
-                    project_chunks = json.load(fh)
-            except Exception as e:
-                print(f"[Metadata Read Error] {e}")
-
-        for idx, sig in enumerate(signals):
-            sev_str = str(sig.get('severity', 'high')).upper()
-            score = 85 if 'CRITICAL' in sev_str else (70 if 'HIGH' in sev_str else 55)
-            src_entities = sig.get('source_entity_ids', [])
-            sig_title = sig.get('title', '').lower()
-
-            # Exact dynamic lookup of chunk_id directly from VectorImport source metadata JSON
-            found_chunk = None
-            for eid in src_entities:
-                if not eid:
-                    continue
-                for c in project_chunks:
-                    c_doc = str(c.get('doc_id', ''))
-                    c_chk = str(c.get('chunk_id', ''))
-                    if c_doc == eid or c_chk.startswith(f"{eid}_chk_"):
-                        found_chunk = c_chk
-                        break
-                if found_chunk:
-                    break
-
-            if not found_chunk:
-                for c in project_chunks:
-                    c_text = (str(c.get('text', '')) + ' ' + str(c.get('title', ''))).lower()
-                    if any(kw in c_text for kw in sig_title.split() if len(kw) > 4):
-                        found_chunk = c.get('chunk_id')
-                        break
-
-            if not found_chunk and project_chunks:
-                found_chunk = project_chunks[0].get('chunk_id')
-
-            source_label = f"VectorImport Store [{v_proj_name}] (Chunk: {found_chunk})"
-
-            discovered_list.append({
-                'project_id': project.id,
-                'project_code': project_code,
-                'category': 'Risk' if 'block' in sig.get('category', '').lower() else 'Dependency',
-                'title': sig.get('title', f'Discovered Risk #{idx+1}'),
-                'description': sig.get('description', ''),
-                'likelihood': 'High' if score >= 70 else 'Medium',
-                'impact': 'High',
-                'risk_score': score,
-                'owner_name': project.owner_name,
-                'root_cause': f"Signal Category: {sig.get('category')}. Source Entities: {', '.join(src_entities)}",
-                'source_feed': source_label
-            })
-
-    # 3. Filter out risks that are already confirmed and registered in app.db for this project
+    # 4. Filter out risks already registered in app.db for this project
     existing_raids = RAIDItem.query.filter_by(project_id=project.id).all()
     existing_titles = [r.title.strip().lower() for r in existing_raids]
 
     unregistered_list = []
+    seen_titles = set()
     for item in discovered_list:
-        t_lower = item['title'].strip().lower()
+        t_clean = item['title'].strip()
+        t_lower = t_clean.lower()
+        if t_lower in seen_titles:
+            continue
+        seen_titles.add(t_lower)
         is_already_added = any(t_lower in ext or ext in t_lower for ext in existing_titles)
         if not is_already_added:
             unregistered_list.append(item)
@@ -264,19 +246,16 @@ def discover_risks_with_ai():
     discovered_list = unregistered_list
 
     supervisor_trace = [
-        {'name': '1. VectorImport Graph 1 Knowledge Bundle', 'status': 'COMPLETED', 'latency_ms': 12},
-        {'name': '2. VectorImport Project Intelligence Engine (execute_intelligence)', 'status': intel_res.get('status', 'COMPLETED').upper(), 'latency_ms': intel_res.get('execution_time_ms', 15)},
-        {'name': '3. VectorImport Graph 2 Decision Intelligence (execute_analysis)', 'status': 'COMPLETED', 'latency_ms': 25}
+        {'name': '1. Unified RAG VectorStore Ingestion', 'status': 'COMPLETED', 'latency_ms': 8},
+        {'name': '2. Unified RiskIntelligence Engine Execution', 'status': 'COMPLETED', 'latency_ms': 15},
+        {'name': '3. Deduplication & DB Persistence Check', 'status': 'COMPLETED', 'latency_ms': 2}
     ]
 
     return jsonify({
-        'status': 'success',
-        'message': f'VectorImport execute_intelligence and execute_analysis completed for {project_code}. Found {len(discovered_list)} new un-tracked risks.',
-        'intelligence': intel_res,
-        'discovered_risk': discovered_list[0] if discovered_list else None,
+        'status': 'SUCCESS',
+        'project_code': project_code,
+        'discovered_count': len(discovered_list),
         'discovered_risks': discovered_list,
-        'total_discovered': len(discovered_list),
-        'supervisor_trace': supervisor_trace
     }), 200
 
 @raid_bp.route('/<int:raid_id>/action-plan', methods=['GET'])

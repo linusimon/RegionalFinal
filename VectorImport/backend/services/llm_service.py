@@ -36,13 +36,19 @@ class LLMService:
         model_name: str | None = None,
     ) -> None:
         self.provider = (provider or Config.LLM_PROVIDER).lower()
-        self.api_key = api_key or Config.LLM_API_KEY or os.getenv("LLM_API_KEY", "")
+        self.api_key = api_key or os.getenv("LLM_API_KEY") or os.getenv("TCS_GENAI_API_KEY") or getattr(Config, "LLM_API_KEY", "")
         self.base_url = (
             base_url
             or os.getenv("LLM_BASE_URL")
+            or os.getenv("TCS_GENAI_BASE_URL")
             or getattr(Config, "LLM_BASE_URL", "https://genailab.tcs.in/v1")
         )
-        self.model_name = model_name or os.getenv("LLM_MODEL", getattr(Config, "LLM_MODEL", "gpt-4o-mini"))
+        self.model_name = (
+            model_name
+            or os.getenv("LLM_MODEL")
+            or os.getenv("DEFAULT_LLM_MODEL")
+            or getattr(Config, "LLM_MODEL", "genailab-maas-gpt-4o")
+        )
 
         self.validate_configuration()
 
@@ -51,7 +57,7 @@ class LLMService:
         if not self.api_key or self.api_key.strip() in ("", "placeholder", "your_api_key_here"):
             _log.error("Mandatory LLM API key missing or invalid.")
             raise LLMConfigurationError(
-                "Required environment variable 'LLM_API_KEY' is missing or invalid. "
+                "Required environment variable 'LLM_API_KEY' or 'TCS_GENAI_API_KEY' is missing or invalid. "
                 "Graph 2 LLM execution requires a valid LLM API key from TCS GenAI Lab."
             )
 
@@ -62,12 +68,14 @@ class LLMService:
         self.validate_configuration()
 
         try:
+            import httpx
             from langchain_openai import ChatOpenAI
 
             kwargs: dict = {
                 "model": self.model_name,
                 "api_key": self.api_key,
                 "temperature": 0.1,
+                "http_client": httpx.Client(verify=False)
             }
             if self.base_url and self.base_url.strip():
                 kwargs["base_url"] = self.base_url.strip()

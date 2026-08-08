@@ -222,6 +222,71 @@
   },
   {
     "index_pos": 17,
+    "chunk_id": "chk_PRJ-003_doc_prj_001_synthetic_vendor_outage_risk.txt_0",
+    "doc_id": "doc_file_prj_001_synthetic_vendor_outage_risk.txt",
+    "source": "FileAdapter",
+    "title": "Document: prj_001_synthetic_vendor_outage_risk.txt",
+    "text": "Document [prj_001_synthetic_vendor_outage_risk.txt]: Project PRJ-001 (Project Orion Upgrade) - Critical Technical Risk Log",
+    "metadata": {
+      "project_code": "PRJ-003",
+      "type": "file",
+      "filename": "prj_001_synthetic_vendor_outage_risk.txt"
+    }
+  },
+  {
+    "index_pos": 18,
+    "chunk_id": "chk_PRJ-003_doc_prj_001_synthetic_vendor_outage_risk.txt_1",
+    "doc_id": "doc_file_prj_001_synthetic_vendor_outage_risk.txt",
+    "source": "FileAdapter",
+    "title": "Document: prj_001_synthetic_vendor_outage_risk.txt",
+    "text": "Document [prj_001_synthetic_vendor_outage_risk.txt]: [URGENT MEMO - PRJ-001 VENDOR API & CLOUD REGION OUTAGE]\nDate: 2026-08-08\nProject Code: PRJ-001\nProject Name: Project Orion Upgrade\nAuthor: Lead System Architect & Risk Officer",
+    "metadata": {
+      "project_code": "PRJ-003",
+      "type": "file",
+      "filename": "prj_001_synthetic_vendor_outage_risk.txt"
+    }
+  },
+  {
+    "index_pos": 19,
+    "chunk_id": "chk_PRJ-003_doc_prj_001_synthetic_vendor_outage_risk.txt_2",
+    "doc_id": "doc_file_prj_001_synthetic_vendor_outage_risk.txt",
+    "source": "FileAdapter",
+    "title": "Document: prj_001_synthetic_vendor_outage_risk.txt",
+    "text": "Document [prj_001_synthetic_vendor_outage_risk.txt]: Summary & Key Findings:\nRecent diagnostic reports indicate a critical technical risk for Project Orion Upgrade (PRJ-001). The primary third-party cloud payment gateway vendor (GatewayX) has reported repeated SSL handshake failures and intermittent sandbox downtime in the ap-south-1 region.",
+    "metadata": {
+      "project_code": "PRJ-003",
+      "type": "file",
+      "filename": "prj_001_synthetic_vendor_outage_risk.txt"
+    }
+  },
+  {
+    "index_pos": 20,
+    "chunk_id": "chk_PRJ-003_doc_prj_001_synthetic_vendor_outage_risk.txt_3",
+    "doc_id": "doc_file_prj_001_synthetic_vendor_outage_risk.txt",
+    "source": "FileAdapter",
+    "title": "Document: prj_001_synthetic_vendor_outage_risk.txt",
+    "text": "Document [prj_001_synthetic_vendor_outage_risk.txt]: Risk Impact Analysis for PRJ-001:\n1. Technical Risk: Data sync latency between Orion microservices and GatewayX API endpoints exceeds 4,500ms (SLA threshold is 500ms).\n2. Schedule Risk: Milestone 3 integration testing for PRJ-001 is delayed by 8 business days due to unannounced API v2.4 deprecation by the vendor.\n3. Security Impact: High probability of OAuth token expiration and transaction rollback during bulk processing for PRJ-001.",
+    "metadata": {
+      "project_code": "PRJ-003",
+      "type": "file",
+      "filename": "prj_001_synthetic_vendor_outage_risk.txt"
+    }
+  },
+  {
+    "index_pos": 21,
+    "chunk_id": "chk_PRJ-003_doc_prj_001_synthetic_vendor_outage_risk.txt_4",
+    "doc_id": "doc_file_prj_001_synthetic_vendor_outage_risk.txt",
+    "source": "FileAdapter",
+    "title": "Document: prj_001_synthetic_vendor_outage_risk.txt",
+    "text": "Document [prj_001_synthetic_vendor_outage_risk.txt]: Required Mitigation Strategy for PRJ-001:\n- Immediately deploy a local mock payment gateway server for the PRJ-001 engineering team to unblock integration testing.\n- Issue formal PMO SLA breach escalation notification directly to GatewayX leadership.\n- Activate secondary fallback payment service provider (PSP-2) before the final PRJ-001 production sign-off.",
+    "metadata": {
+      "project_code": "PRJ-003",
+      "type": "file",
+      "filename": "prj_001_synthetic_vendor_outage_risk.txt"
+    }
+  },
+  {
+    "index_pos": 22,
     "chunk_id": "chk_PRJ-003_doc_risk_sop.txt_0",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -234,7 +299,7 @@
     }
   },
   {
-    "index_pos": 18,
+    "index_pos": 23,
     "chunk_id": "chk_PRJ-003_doc_risk_sop.txt_1",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -247,7 +312,7 @@
     }
   },
   {
-    "index_pos": 19,
+    "index_pos": 24,
     "chunk_id": "chk_PRJ-003_doc_risk_sop.txt_2",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -260,7 +325,7 @@
     }
   },
   {
-    "index_pos": 20,
+    "index_pos": 25,
     "chunk_id": "chk_PRJ-003_doc_risk_sop.txt_3",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -273,7 +338,7 @@
     }
   },
   {
-    "index_pos": 21,
+    "index_pos": 26,
     "chunk_id": "chk_PRJ-003_doc_risk_sop.txt_4",
     "doc_id": "doc_file_risk_sop.txt",
     "source": "FileAdapter",
@@ -286,7 +351,7 @@
     }
   },
   {
-    "index_pos": 22,
+    "index_pos": 27,
     "chunk_id": "chk_PRJ-003_doc_security_policy.txt_0",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -299,7 +364,7 @@
     }
   },
   {
-    "index_pos": 23,
+    "index_pos": 28,
     "chunk_id": "chk_PRJ-003_doc_security_policy.txt_1",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -312,7 +377,7 @@
     }
   },
   {
-    "index_pos": 24,
+    "index_pos": 29,
     "chunk_id": "chk_PRJ-003_doc_security_policy.txt_2",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -325,7 +390,7 @@
     }
   },
   {
-    "index_pos": 25,
+    "index_pos": 30,
     "chunk_id": "chk_PRJ-003_doc_security_policy.txt_3",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
@@ -338,7 +403,7 @@
     }
   },
   {
-    "index_pos": 26,
+    "index_pos": 31,
     "chunk_id": "chk_PRJ-003_doc_security_policy.txt_4",
     "doc_id": "doc_file_security_policy.txt",
     "source": "FileAdapter",
